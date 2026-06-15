@@ -1,0 +1,90 @@
+<nav class="fixed w-full z-50 glass border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="text-2xl font-bold tracking-tighter">VAMP<span class="text-blue-600">NETWORK</span></div>
+        <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-300">
+            <a href="#home" class="hover:text-blue-500 transition">Home</a>
+            <a href="#about" class="hover:text-blue-500 transition">About</a>
+            <a href="#features" class="hover:text-blue-500 transition">Features</a>
+            <a href="#team" class="hover:text-blue-500 transition">Team</a>
+        </div>
+        <a href="#" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-full text-xs font-bold transition">DISCORD</a>
+    </div>
+</nav>
+
+<header id="home" class="relative min-h-screen flex items-center justify-center pt-20 grid-bg">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#050505]"></div>
+    <div class="relative z-10 text-center px-4">
+        <h1 class="text-7xl md:text-9xl font-extrabold mb-6 tracking-tighter animate-fade-up">VAMP NETWORK</h1>
+        <p class="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl mx-auto animate-fade-up" style="transition-delay: 0.2s;">A Premium Minecraft Experience built for performance, quality, and unforgettable adventures.</p>
+        <div class="flex gap-4 justify-center animate-fade-up" style="transition-delay: 0.4s;">
+            <button class="px-8 py-4 bg-red-600 hover:bg-red-700 rounded-lg font-bold transition glow-red">Join Discord</button>
+            <button class="px-8 py-4 bg-white/5 hover:bg-white/10 rounded-lg font-bold transition border border-white/10">Learn More</button>
+        </div>
+    </div>
+</header>
+
+<section id="stats" class="py-20 max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {[ {t: '100%', l: 'Web Progress'}, {t: 'Growing', l: 'Community'}, {t: '70%', l: 'Core Systems'}, {t: '2026', l: 'Launch Year'} ].map(s => (
+            <div class="glass p-8 rounded-2xl border-l-4 border-blue-600 hover-lift">
+                <div class="text-3xl font-bold text-blue-500 mb-1">{s.t}</div>
+                <div class="text-gray-400 text-sm">{s.l}</div>
+            </div>
+        ))}
+    </div>
+</section>
+
+<section id="about" class="py-20 bg-[#0f0f0f]">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-8">About VAMP Network</h2>
+        <p class="text-gray-400 text-lg leading-relaxed">VAMP Network is an upcoming Minecraft server dedicated to delivering high-performance gameplay. We focus on building a sustainable, community-first ecosystem that prioritizes fair play and unique experiences for every player.</p>
+    </div>
+</section>
+
+<section id="features" class="py-20 max-w-7xl mx-auto px-6">
+    <div class="grid md:grid-cols-3 gap-8">
+        {['High Performance', 'Fair Gameplay', 'Friendly Community', 'Unique Experiences', 'Active Development', 'Community Focused'].map(f => (
+            <div class="glass p-8 rounded-2xl hover-lift border border-white/10 hover:border-blue-500/50 transition">
+                <i class="fas fa-microchip text-blue-500 text-3xl mb-6"></i>
+                <h3 class="text-xl font-bold mb-3">{f}</h3>
+                <p class="text-gray-400 text-sm">Engineered for perfection, stability, and extreme performance.</p>
+            </div>
+        ))}
+    </div>
+</section>
+
+<section id="progress" class="py-20 max-w-4xl mx-auto px-6">
+    <h2 class="text-3xl font-bold mb-12 text-center">Development Progress</h2>
+    {[ {n: 'Website Development', w: '100%'}, {n: 'Discord Community', w: '100%'}, {n: 'Core Systems', w: '70%'}, {n: 'Infrastructure', w: '50%'}, {n: 'Launch Readiness', w: '10%'} ].map(p => (
+        <div class="mb-6">
+            <div class="flex justify-between text-sm mb-2 font-semibold"><span>{p.n}</span><span>{p.w}</span></div>
+            <div class="h-2 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-blue-600" style="width: {p.w}"></div></div>
+        </div>
+    ))}
+</section>
+
+<section id="cta" class="py-20 px-6">
+    <div class="max-w-4xl mx-auto glass p-16 rounded-3xl text-center border-t border-red-600 shadow-2xl shadow-red-900/20">
+        <h2 class="text-5xl font-bold mb-6">Join the VAMP Community</h2>
+        <p class="text-gray-400 mb-10">Stay updated with development news, announcements, sneak peeks, and future release information.</p>
+        <button class="px-12 py-5 bg-red-600 hover:bg-red-700 rounded-xl font-bold transition">Join Discord</button>
+    </div>
+</section>
+
+<footer class="py-12 text-center text-gray-500 border-t border-white/5">
+    <p class="font-bold text-white mb-2">VAMP NETWORK</p>
+    <p class="text-sm">&copy; 2026. All rights reserved.</p>
+</footer>
+
+<script>
+    const observer = new IntersectionObserver((e) => {
+        e.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
+    });
+    document.querySelectorAll('.animate-fade-up').forEach(el => observer.observe(el));
+    
+    document.addEventListener('mousemove', (e) => {
+        const g = document.getElementById('cursor-glow');
+        g.style.left = e.clientX + 'px';
+        g.style.top = e.clientY + 'px';
+    });
+</script>
