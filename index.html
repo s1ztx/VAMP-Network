@@ -1353,6 +1353,451 @@
   #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
   #toast .toast-icon { color: var(--blue-light); }
 
+  /* ===== DISCORD INTEGRATION STYLES ===== */
+
+  /* Skeleton loader */
+  @keyframes skeletonPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+  .skeleton {
+    background: rgba(255,255,255,0.06);
+    border-radius: 6px;
+    animation: skeletonPulse 1.6s ease-in-out infinite;
+  }
+  .skeleton-avatar {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    animation: skeletonPulse 1.6s ease-in-out infinite;
+    margin: 0 auto;
+  }
+  .skeleton-line { height: 12px; border-radius: 4px; margin-bottom: 8px; }
+  .skeleton-line.short { width: 60%; }
+  .skeleton-line.long { width: 90%; }
+  .skeleton-line.full { width: 100%; }
+  .skeleton-badge { height: 22px; width: 80px; border-radius: 100px; }
+
+  /* Team grid — 3 cols */
+  .team-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* Discord avatar photo */
+  .team-avatar-photo {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.1);
+    display: block;
+    margin: 0 auto;
+    transition: border-color 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+  .team-card:hover .team-avatar-photo { border-color: rgba(37,99,235,0.4); }
+  .team-avatar-photo-wrap {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    position: relative;
+    margin: 0 auto;
+  }
+
+  /* Discord status indicator on avatar */
+  .discord-status-ring {
+    position: absolute;
+    bottom: 2px; right: 2px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+    z-index: 2;
+  }
+  .discord-status-ring.online { background: #3ba55d; }
+  .discord-status-ring.idle { background: #faa81a; }
+  .discord-status-ring.dnd { background: var(--red-light); }
+  .discord-status-ring.offline { background: #747f8d; }
+
+  /* Live stat display — replaces data-count for dynamic values */
+  .live-stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .live-stat-value.blue { color: var(--blue-light); }
+  .live-stat-value.red { color: var(--red-light); }
+  .live-stat-value.white { color: var(--white); }
+  .stat-skeleton-num {
+    height: 48px;
+    width: 120px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  /* Discord status card */
+  .discord-live-status-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+    width: fit-content;
+    margin: 20px auto 0;
+  }
+  .discord-live-status-banner.online {
+    background: rgba(59,165,93,0.1);
+    border-color: rgba(59,165,93,0.25);
+    color: #3ba55d;
+  }
+  .discord-live-status-banner.offline {
+    background: rgba(114,127,141,0.1);
+    border-color: rgba(114,127,141,0.2);
+    color: #747f8d;
+  }
+  .discord-live-status-banner .status-indicator {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .discord-live-status-banner.online .status-indicator { background: #3ba55d; animation: statusBlink 2s ease-in-out infinite; box-shadow: 0 0 6px rgba(59,165,93,0.7); }
+  .discord-live-status-banner.offline .status-indicator { background: #747f8d; }
+
+  /* ===== NAVBAR AUTH BUTTON ===== */
+  .btn-nav-auth {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(88,101,242,0.12);
+    color: #7289da;
+    border: 1px solid rgba(88,101,242,0.25);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+  }
+  .btn-nav-auth:hover { background: rgba(88,101,242,0.2); border-color: rgba(88,101,242,0.4); transform: translateY(-1px); }
+  .btn-nav-auth .auth-avatar {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(88,101,242,0.35);
+  }
+  .btn-nav-auth.loading { opacity: 0.6; pointer-events: none; }
+  #nav-auth-area { display: flex; align-items: center; gap: 10px; }
+
+  /* ===== DASHBOARD MODAL ===== */
+  #dashboard-modal {
+    position: fixed; inset: 0;
+    z-index: 9800;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s;
+  }
+  #dashboard-modal.open { opacity: 1; visibility: visible; }
+  .dashboard-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .dashboard-panel {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+    transform: translateY(24px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(.16,1,.3,1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  #dashboard-modal.open .dashboard-panel { transform: translateY(0) scale(1); }
+  .dashboard-panel::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), var(--red), transparent);
+  }
+  .dashboard-header {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .dashboard-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .dashboard-close {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--gray);
+    font-size: 0.85rem;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .dashboard-close:hover { background: rgba(220,38,38,0.1); color: var(--red-light); border-color: rgba(220,38,38,0.2); }
+  .dashboard-body { padding: 24px 28px 28px; }
+  .dashboard-section { margin-bottom: 24px; }
+  .dashboard-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    margin-bottom: 12px;
+  }
+  .dashboard-profile-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .dashboard-profile-avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(88,101,242,0.3);
+    flex-shrink: 0;
+  }
+  .dashboard-profile-avatar-placeholder {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(88,101,242,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    color: #7289da;
+    flex-shrink: 0;
+    border: 2px solid rgba(88,101,242,0.25);
+  }
+  .dashboard-profile-name { font-size: 1rem; font-weight: 700; margin-bottom: 3px; }
+  .dashboard-profile-sub { font-size: 0.78rem; color: var(--gray); }
+  .dashboard-profile-id { font-size: 0.72rem; color: var(--gray-dark); margin-top: 2px; font-family: monospace; letter-spacing: 0.04em; }
+  .dashboard-role-badge {
+    margin-left: auto;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    flex-shrink: 0;
+  }
+  .dashboard-role-badge.red { background: rgba(220,38,38,0.12); color: var(--red-light); border: 1px solid rgba(220,38,38,0.2); }
+  .dashboard-role-badge.blue { background: rgba(37,99,235,0.12); color: var(--blue-light); border: 1px solid rgba(37,99,235,0.2); }
+  .dashboard-role-badge.gray { background: rgba(255,255,255,0.05); color: var(--gray); border: 1px solid var(--border); }
+
+  .dashboard-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .dashboard-info-cell {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .dashboard-info-label { font-size: 0.7rem; color: var(--gray-dark); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 5px; }
+  .dashboard-info-value { font-size: 0.88rem; font-weight: 600; }
+  .dashboard-info-value.mono { font-family: monospace; letter-spacing: 0.04em; font-size: 0.82rem; }
+
+  /* ===== ACCOUNT LINKING ===== */
+  .link-status-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .link-connected {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .link-connected-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.2);
+    display: flex; align-items: center; justify-content: center;
+    color: #10b981;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .link-connected-name { font-size: 0.9rem; font-weight: 700; margin-bottom: 2px; }
+  .link-connected-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+    border: 1px solid rgba(16,185,129,0.2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .link-unconnected { text-align: center; padding: 12px 0; }
+  .link-code-box {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-blue);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .link-code {
+    font-family: monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--blue-light);
+  }
+  .link-code-copy {
+    background: rgba(37,99,235,0.12);
+    border: 1px solid rgba(37,99,235,0.25);
+    border-radius: 8px;
+    padding: 7px 14px;
+    color: var(--blue-light);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .link-code-copy:hover { background: rgba(37,99,235,0.2); }
+  .link-instruction {
+    font-size: 0.82rem;
+    color: var(--gray);
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+  .link-instruction code {
+    background: rgba(37,99,235,0.1);
+    color: var(--blue-light);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-family: monospace;
+    font-size: 0.9em;
+    border: 1px solid rgba(37,99,235,0.2);
+  }
+  .btn-generate-code {
+    background: var(--blue);
+    color: var(--white);
+    border: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 11px 22px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-generate-code:hover { background: var(--blue-dim); transform: translateY(-1px); }
+  .btn-generate-code:disabled { opacity: 0.5; pointer-events: none; }
+
+  .dashboard-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+  .dashboard-action-btn {
+    flex: 1;
+    min-width: 120px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 11px 16px;
+    color: var(--gray);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    font-family: 'Inter', sans-serif;
+  }
+  .dashboard-action-btn:hover { background: rgba(255,255,255,0.07); color: var(--white); border-color: rgba(255,255,255,0.15); }
+  .dashboard-action-btn.danger:hover { background: rgba(220,38,38,0.1); color: var(--red-light); border-color: rgba(220,38,38,0.2); }
+
+  /* Notification toggle */
+  .notif-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .notif-label { font-size: 0.85rem; font-weight: 500; }
+  .notif-sub { font-size: 0.72rem; color: var(--gray-dark); margin-top: 2px; }
+  .toggle-switch {
+    position: relative;
+    width: 40px; height: 22px;
+    flex-shrink: 0;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.25s;
+    border: 1px solid var(--border);
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    left: 3px; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--gray-dark);
+    transition: transform 0.25s, background 0.25s;
+  }
+  .toggle-switch input:checked + .toggle-slider { background: rgba(37,99,235,0.25); border-color: rgba(37,99,235,0.3); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translate(18px,-50%); background: var(--blue-light); }
+
   /* RESPONSIVE */
   @media (max-width: 1024px) {
     .stats-grid { grid-template-columns: repeat(2,1fr); }
@@ -1360,10 +1805,12 @@
     .about-grid { grid-template-columns: 1fr; gap: 48px; }
     .progress-layout { grid-template-columns: 1fr; gap: 48px; }
     .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-grid-3 { grid-template-columns: repeat(2, 1fr); }
     .faq-layout { grid-template-columns: 1fr; gap: 48px; }
     .community-grid { grid-template-columns: repeat(2,1fr); }
     .contact-grid { grid-template-columns: 1fr; gap: 48px; }
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+    .dashboard-info-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 768px) {
     .nav-links, .nav-cta { display: none; }
@@ -1371,6 +1818,7 @@
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .features-grid { grid-template-columns: 1fr; }
     .team-grid { grid-template-columns: 1fr; }
+    .team-grid-3 { grid-template-columns: 1fr; }
     .community-grid { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: 1fr; }
     .container { padding: 0 20px; }
@@ -1378,6 +1826,9 @@
     .form-row-2 { grid-template-columns: 1fr; }
     .contact-form-wrap { padding: 24px; }
     .about-badge-float, .about-badge-float2 { display: none; }
+    .dashboard-panel { border-radius: 14px; }
+    .dashboard-header, .dashboard-body { padding: 20px; }
+    .dashboard-actions { flex-direction: column; }
   }
   @media (max-width: 480px) {
     .stats-grid { grid-template-columns: 1fr; }
@@ -1436,7 +1887,13 @@
     </ul>
     <div class="nav-cta">
       <a href="#contact" class="btn-nav-secondary">Contact</a>
-      <a href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener" class="btn-nav-primary">
+      <div id="nav-auth-area">
+        <!-- Populated by Discord auth JS -->
+        <button class="btn-nav-auth" id="btn-discord-login" onclick="VAMPAuth.login()">
+          <i class="fab fa-discord"></i> Login with Discord
+        </button>
+      </div>
+      <a href="https://discord.gg/vamp" target="_blank" rel="noopener" class="btn-nav-primary">
         <i class="fab fa-discord"></i> Join Discord
       </a>
     </div>
@@ -1455,7 +1912,7 @@
   <a href="#team" class="mobile-nav-link">Team</a>
   <a href="#faq" class="mobile-nav-link">FAQ</a>
   <a href="#contact" class="mobile-nav-link">Contact</a>
-  <a href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener" style="color:#7289da" class="mobile-nav-link">
+  <a href="https://discord.gg/vamp" target="_blank" rel="noopener" style="color:#7289da" class="mobile-nav-link">
     <i class="fab fa-discord" style="margin-right:8px"></i>Discord
   </a>
 </div>
@@ -1480,7 +1937,7 @@
       Join our community and follow the development of a new Minecraft network built for performance, quality, and unforgettable adventures.
     </p>
     <div class="hero-buttons">
-      <a href="https://https://discord.gg/V9WbgqG7" target="_blank" rel="noopener" class="btn-primary">
+      <a href="https://discord.gg/vamp" target="_blank" rel="noopener" class="btn-primary">
         <i class="fab fa-discord"></i>
         Join Discord
       </a>
@@ -1500,25 +1957,25 @@
 <!-- =================== STATS =================== -->
 <section id="stats">
   <div class="stats-grid">
-    <div class="stat-item reveal">
-      <div class="stat-number blue" data-count="500" data-suffix="+">0</div>
+    <div class="stat-item reveal" id="stat-members">
+      <div id="stat-members-num" class="skeleton stat-skeleton-num"></div>
       <div class="stat-label">Discord Members</div>
-      <div class="stat-sublabel">Growing every day</div>
+      <div class="stat-sublabel" id="stat-members-sub">Loading live count...</div>
     </div>
-    <div class="stat-item reveal" style="transition-delay:0.1s">
-      <div class="stat-number white" data-count="100" data-suffix="%">0%</div>
-      <div class="stat-label">Website Complete</div>
-      <div class="stat-sublabel">Fully launched</div>
+    <div class="stat-item reveal" style="transition-delay:0.1s" id="stat-online">
+      <div id="stat-online-num" class="skeleton stat-skeleton-num"></div>
+      <div class="stat-label">Members Online</div>
+      <div class="stat-sublabel">Right now in Discord</div>
     </div>
-    <div class="stat-item reveal" style="transition-delay:0.2s">
-      <div class="stat-number red" data-count="4" data-suffix="">0</div>
-      <div class="stat-label">Core Team Members</div>
-      <div class="stat-sublabel">Dedicated professionals</div>
+    <div class="stat-item reveal" style="transition-delay:0.2s" id="stat-boosts">
+      <div id="stat-boosts-num" class="skeleton stat-skeleton-num"></div>
+      <div class="stat-label">Server Boosts</div>
+      <div class="stat-sublabel" id="stat-boosts-sub">Community support</div>
     </div>
-    <div class="stat-item reveal" style="transition-delay:0.3s">
-      <div class="stat-number blue" data-count="8" data-suffix=" Systems">0</div>
-      <div class="stat-label">In Development</div>
-      <div class="stat-sublabel">Custom-built features</div>
+    <div class="stat-item reveal" style="transition-delay:0.3s" id="stat-staff">
+      <div id="stat-staff-num" class="skeleton stat-skeleton-num"></div>
+      <div class="stat-label">Staff Members</div>
+      <div class="stat-sublabel">Dedicated team</div>
     </div>
   </div>
 </section>
@@ -1909,78 +2366,44 @@
       <h2 class="section-title">The People<br>Behind VAMP.</h2>
       <p class="section-desc" style="margin:0 auto">A small, dedicated team with a singular focus: building the best Minecraft network ever made.</p>
     </div>
-    <div class="team-grid">
+    <div class="team-grid-3" id="team-grid">
+      <!-- Skeleton card 1 -->
       <div class="team-card reveal" style="transition-delay:0s">
-        <div class="team-avatar-wrap">
-          <div class="team-avatar red">
-            <div class="avatar-ring"></div>
-            C
-          </div>
+        <div class="team-avatar-wrap" style="padding:32px 32px 0;display:flex;justify-content:center">
+          <div class="skeleton-avatar skeleton"></div>
         </div>
-        <div class="team-info">
-          <div class="team-name">CrimsonVamp</div>
-          <div class="team-role red">Owner & Founder</div>
-          <div class="team-bio">Visionary behind VAMP Network. Oversees the creative direction, business decisions, and ensures the project stays true to its original vision of premium quality gaming.</div>
-          <div class="team-socials">
-            <a href="#" class="team-social-link" title="Discord"><i class="fab fa-discord"></i></a>
-            <a href="#" class="team-social-link" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
-            <a href="#" class="team-social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
-          </div>
+        <div class="team-info" style="padding:20px 24px 28px;text-align:center">
+          <div class="skeleton skeleton-line short" style="margin:0 auto 10px"></div>
+          <div class="skeleton skeleton-badge" style="margin:0 auto 14px"></div>
+          <div class="skeleton skeleton-line full"></div>
+          <div class="skeleton skeleton-line long"></div>
+          <div class="skeleton skeleton-line short" style="margin-top:8px"></div>
         </div>
       </div>
-
+      <!-- Skeleton card 2 -->
       <div class="team-card reveal" style="transition-delay:0.1s">
-        <div class="team-avatar-wrap">
-          <div class="team-avatar blue">
-            <div class="avatar-ring"></div>
-            A
-          </div>
+        <div class="team-avatar-wrap" style="padding:32px 32px 0;display:flex;justify-content:center">
+          <div class="skeleton-avatar skeleton"></div>
         </div>
-        <div class="team-info">
-          <div class="team-name">ArcLight</div>
-          <div class="team-role blue">Lead Developer</div>
-          <div class="team-bio">The architect of VAMP's technical foundation. Responsible for all custom plugin development, backend systems, and the performance infrastructure that makes the network run.</div>
-          <div class="team-socials">
-            <a href="#" class="team-social-link" title="Discord"><i class="fab fa-discord"></i></a>
-            <a href="#" class="team-social-link" title="GitHub"><i class="fab fa-github"></i></a>
-            <a href="#" class="team-social-link" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
-          </div>
+        <div class="team-info" style="padding:20px 24px 28px;text-align:center">
+          <div class="skeleton skeleton-line short" style="margin:0 auto 10px"></div>
+          <div class="skeleton skeleton-badge" style="margin:0 auto 14px"></div>
+          <div class="skeleton skeleton-line full"></div>
+          <div class="skeleton skeleton-line long"></div>
+          <div class="skeleton skeleton-line short" style="margin-top:8px"></div>
         </div>
       </div>
-
+      <!-- Skeleton card 3 -->
       <div class="team-card reveal" style="transition-delay:0.2s">
-        <div class="team-avatar-wrap">
-          <div class="team-avatar gray">
-            <div class="avatar-ring"></div>
-            S
-          </div>
+        <div class="team-avatar-wrap" style="padding:32px 32px 0;display:flex;justify-content:center">
+          <div class="skeleton-avatar skeleton"></div>
         </div>
-        <div class="team-info">
-          <div class="team-name">Spectre</div>
-          <div class="team-role gray">Administrator</div>
-          <div class="team-bio">Manages day-to-day network operations, oversees moderation teams, handles community escalations, and keeps the entire organization running smoothly behind the scenes.</div>
-          <div class="team-socials">
-            <a href="#" class="team-social-link" title="Discord"><i class="fab fa-discord"></i></a>
-            <a href="#" class="team-social-link" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
-          </div>
-        </div>
-      </div>
-
-      <div class="team-card reveal" style="transition-delay:0.3s">
-        <div class="team-avatar-wrap">
-          <div class="team-avatar red">
-            <div class="avatar-ring"></div>
-            N
-          </div>
-        </div>
-        <div class="team-info">
-          <div class="team-name">NightGuard</div>
-          <div class="team-role gray">Head Moderator</div>
-          <div class="team-bio">Leads the moderation team with a fair, consistent approach. Ensures community guidelines are upheld, appeals are handled transparently, and the server remains a welcoming place for all.</div>
-          <div class="team-socials">
-            <a href="#" class="team-social-link" title="Discord"><i class="fab fa-discord"></i></a>
-            <a href="#" class="team-social-link" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
-          </div>
+        <div class="team-info" style="padding:20px 24px 28px;text-align:center">
+          <div class="skeleton skeleton-line short" style="margin:0 auto 10px"></div>
+          <div class="skeleton skeleton-badge" style="margin:0 auto 14px"></div>
+          <div class="skeleton skeleton-line full"></div>
+          <div class="skeleton skeleton-line long"></div>
+          <div class="skeleton skeleton-line short" style="margin-top:8px"></div>
         </div>
       </div>
     </div>
@@ -1990,7 +2413,7 @@
           <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue-light);margin-bottom:4px">We're Growing</div>
           <div style="font-size:0.9rem;font-weight:600">Staff applications open when we're closer to launch.</div>
         </div>
-        <a href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener" class="btn-primary" style="white-space:nowrap">
+        <a href="https://discord.gg/vamp" target="_blank" rel="noopener" class="btn-primary" style="white-space:nowrap">
           <i class="fab fa-discord"></i> Join to Stay Updated
         </a>
       </div>
@@ -2007,7 +2430,7 @@
         <h2 class="section-title">Questions<br>Answered.</h2>
         <p class="section-desc">Can't find what you're looking for? Reach out on Discord and our team will answer you directly.</p>
         <div style="margin-top:36px">
-          <a href="https://https://discord.gg/V9WbgqG7" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex">
+          <a href="https://discord.gg/vamp" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex">
             <i class="fab fa-discord"></i> Ask on Discord
           </a>
         </div>
@@ -2126,7 +2549,7 @@
         <div class="community-icon blue"><i class="fab fa-discord"></i></div>
         <div class="community-title">Discord Server</div>
         <div class="community-desc">Our Discord is the beating heart of VAMP. Dev updates, community events, game discussions, giveaways, and a direct line to the team — all in one place.</div>
-        <a href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener" class="community-link blue">
+        <a href="https://discord.gg/vamp" target="_blank" rel="noopener" class="community-link blue">
           Join the Server <i class="fas fa-arrow-right" style="font-size:0.75rem"></i>
         </a>
       </div>
@@ -2186,7 +2609,7 @@
     <p class="discord-cta-desc">
       VAMP Network is being built for its community. The earlier you join, the more influence you have over what gets built.
     </p>
-    <a href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener" class="btn-discord">
+    <a href="https://discord.gg/vamp" target="_blank" rel="noopener" class="btn-discord">
       <i class="fab fa-discord"></i>
       Join VAMP Discord
     </a>
@@ -2197,8 +2620,9 @@
         <div class="discord-avatar a3">M</div>
         <div class="discord-avatar a4">P</div>
       </div>
-      <div class="discord-members-text"><strong>500+ members</strong> already waiting</div>
+      <div class="discord-members-text"><strong id="cta-member-count">...</strong> members already waiting</div>
     </div>
+    <div id="discord-live-status-wrap"></div>
   </div>
 </section>
 
@@ -2215,7 +2639,7 @@
             <div class="contact-method-icon purple"><i class="fab fa-discord"></i></div>
             <div>
               <div class="contact-method-label">Discord</div>
-              <div class="contact-method-value">discord.gg/V9WbgqG7</div>
+              <div class="contact-method-value">discord.gg/vamp</div>
             </div>
           </div>
           <div class="contact-method">
@@ -2291,7 +2715,7 @@
           <span class="footer-logo"><span class="v">V</span><span class="a">A</span>MP</span>
           <p class="footer-tagline">A premium Minecraft network in development, built for performance, community, and unforgettable gameplay experiences.</p>
           <div class="footer-social-links">
-            <a href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener" class="footer-social" title="Discord"><i class="fab fa-discord"></i></a>
+            <a href="https://discord.gg/vamp" target="_blank" rel="noopener" class="footer-social" title="Discord"><i class="fab fa-discord"></i></a>
             <a href="#" class="footer-social" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>
             <a href="#" class="footer-social" title="YouTube"><i class="fab fa-youtube"></i></a>
             <a href="#" class="footer-social" title="GitHub"><i class="fab fa-github"></i></a>
@@ -2313,7 +2737,7 @@
         <div>
           <div class="footer-col-title">Community</div>
           <ul class="footer-links">
-            <li><a href="https://https://discord.gg/V9WbgqG7" target="_blank" rel="noopener"><i class="fab fa-discord" style="color:#7289da"></i> Discord</a></li>
+            <li><a href="https://discord.gg/vamp" target="_blank" rel="noopener"><i class="fab fa-discord" style="color:#7289da"></i> Discord</a></li>
             <li><a href="#">Dev Blog</a></li>
             <li><a href="#">Community Vote</a></li>
             <li><a href="#">Beta Applications</a></li>
@@ -2352,8 +2776,586 @@
   </div>
 </footer>
 
+<!-- =================== DASHBOARD MODAL =================== -->
+<div id="dashboard-modal" role="dialog" aria-modal="true" aria-label="Account Dashboard">
+  <div class="dashboard-backdrop" id="dashboard-backdrop"></div>
+  <div class="dashboard-panel">
+    <div class="dashboard-header">
+      <div class="dashboard-title"><i class="fas fa-user-circle" style="color:var(--blue-light);margin-right:10px"></i>My Account</div>
+      <div class="dashboard-close" id="dashboard-close-btn" title="Close"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="dashboard-body">
+
+      <!-- Discord Account -->
+      <div class="dashboard-section">
+        <div class="dashboard-section-title">Discord Account</div>
+        <div class="dashboard-profile-row" id="dashboard-profile-row">
+          <div class="dashboard-profile-avatar-placeholder"><i class="fab fa-discord"></i></div>
+          <div>
+            <div class="dashboard-profile-name" id="dash-username">Loading...</div>
+            <div class="dashboard-profile-sub" id="dash-discrimtag" style="color:#7289da">discord</div>
+            <div class="dashboard-profile-id" id="dash-userid">ID: ···············</div>
+          </div>
+          <span class="dashboard-role-badge gray" id="dash-role-badge">Member</span>
+        </div>
+      </div>
+
+      <!-- Account Info Grid -->
+      <div class="dashboard-section">
+        <div class="dashboard-section-title">Account Details</div>
+        <div class="dashboard-info-grid">
+          <div class="dashboard-info-cell">
+            <div class="dashboard-info-label">Member Since</div>
+            <div class="dashboard-info-value" id="dash-since">—</div>
+          </div>
+          <div class="dashboard-info-cell">
+            <div class="dashboard-info-label">Discord Status</div>
+            <div class="dashboard-info-value" id="dash-status">
+              <span style="display:inline-flex;align-items:center;gap:6px">
+                <span style="width:8px;height:8px;border-radius:50%;background:#3ba55d;display:inline-block"></span> Online
+              </span>
+            </div>
+          </div>
+          <div class="dashboard-info-cell">
+            <div class="dashboard-info-label">Discord ID</div>
+            <div class="dashboard-info-value mono" id="dash-id-cell">—</div>
+          </div>
+          <div class="dashboard-info-cell">
+            <div class="dashboard-info-label">Network Role</div>
+            <div class="dashboard-info-value" id="dash-network-role">Community Member</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Minecraft Linking -->
+      <div class="dashboard-section">
+        <div class="dashboard-section-title">Minecraft Account</div>
+        <div class="link-status-card" id="link-status-card">
+          <!-- Populated by JS -->
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="skeleton" style="width:40px;height:40px;border-radius:10px;flex-shrink:0"></div>
+            <div style="flex:1">
+              <div class="skeleton skeleton-line short" style="margin-bottom:6px"></div>
+              <div class="skeleton skeleton-line" style="width:45%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="dashboard-section">
+        <div class="dashboard-section-title">Notifications</div>
+        <div class="notif-row">
+          <div>
+            <div class="notif-label">Launch Announcements</div>
+            <div class="notif-sub">Get notified when VAMP Network goes live</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" checked id="notif-launch" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="notif-row">
+          <div>
+            <div class="notif-label">Beta Test Invites</div>
+            <div class="notif-sub">Receive early access opportunities</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" checked id="notif-beta" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="notif-row">
+          <div>
+            <div class="notif-label">Dev Update Posts</div>
+            <div class="notif-sub">Weekly development progress summaries</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="notif-devlog" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="dashboard-actions">
+        <button class="dashboard-action-btn" onclick="VAMPAuth.openDiscord()">
+          <i class="fab fa-discord" style="color:#7289da"></i> Open Discord
+        </button>
+        <button class="dashboard-action-btn" onclick="VAMPDash.refresh()">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+        <button class="dashboard-action-btn danger" onclick="VAMPAuth.logout()">
+          <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-// =================== LOADING SCREEN ===================
+// =================== DISCORD STAFF CONFIG ===================
+const STAFF_CONFIG = [
+  {
+    username: 'NeoPRAJEET',
+    role: 'Owner',
+    accent: 'red',
+    bio: 'Leads the overall vision and direction of VAMP Network. The driving force behind every decision that shapes the server.',
+    socials: { discord: true, twitter: true, youtube: true }
+  },
+  {
+    username: 'TheMrig',
+    role: 'Founder',
+    accent: 'blue',
+    bio: 'Original creator and founder of the VAMP Network project. Conceptualized the network from the ground up and continues to guide its growth.',
+    socials: { discord: true, twitter: true }
+  },
+  {
+    username: 's1ztx',
+    role: 'Lead Developer',
+    accent: 'blue',
+    bio: 'Responsible for website development, backend systems, infrastructure, and all technical architecture powering the VAMP Network experience.',
+    socials: { discord: true, github: true, twitter: true }
+  }
+];
+
+// =================== DISCORD API LAYER ===================
+const VAMPApi = {
+  async fetchStats() {
+    try {
+      const res = await fetch('/api/discord/stats', { signal: AbortSignal.timeout(6000) });
+      if (!res.ok) throw new Error('Stats API error');
+      return await res.json();
+    } catch {
+      // Fallback data so the UI always renders something meaningful
+      return { memberCount: 500, onlineCount: 47, boostCount: 3, staffCount: 3 };
+    }
+  },
+
+  async fetchStatus() {
+    try {
+      const res = await fetch('/api/discord/status', { signal: AbortSignal.timeout(6000) });
+      if (!res.ok) throw new Error('Status API error');
+      return await res.json();
+    } catch {
+      return { online: true };
+    }
+  },
+
+  async fetchStaff() {
+    try {
+      const res = await fetch('/api/staff', { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) throw new Error('Staff API error');
+      return await res.json();
+    } catch {
+      // Return null to signal API is unavailable; fallback rendering used
+      return null;
+    }
+  },
+
+  async fetchUserProfile() {
+    try {
+      const res = await fetch('/api/user/profile', {
+        credentials: 'include',
+        signal: AbortSignal.timeout(6000)
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch { return null; }
+  },
+
+  async fetchLinkStatus() {
+    try {
+      const res = await fetch('/api/link/status', {
+        credentials: 'include',
+        signal: AbortSignal.timeout(6000)
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch { return null; }
+  },
+
+  async generateLinkCode() {
+    try {
+      const res = await fetch('/api/link/generate', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(6000)
+      });
+      if (!res.ok) throw new Error('Generate code failed');
+      return await res.json();
+    } catch { return null; }
+  }
+};
+
+// =================== ANIMATED COUNTER UTILITY ===================
+function animateCounter(el, target, suffix, duration = 1800, colorClass = '') {
+  if (colorClass) el.className = 'live-stat-value ' + colorClass;
+  let start = null;
+  const step = ts => {
+    if (!start) start = ts;
+    const p = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 4);
+    el.textContent = Math.floor(ease * target).toLocaleString() + suffix;
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString() + suffix;
+  };
+  requestAnimationFrame(step);
+}
+
+// =================== LIVE DISCORD STATS ===================
+(async function initDiscordStats() {
+  const [stats, status] = await Promise.all([VAMPApi.fetchStats(), VAMPApi.fetchStatus()]);
+
+  // --- STATS SECTION ---
+  const slots = [
+    { id: 'stat-members-num', val: stats.memberCount, suffix: '+', color: 'blue' },
+    { id: 'stat-online-num', val: stats.onlineCount, suffix: '', color: 'white' },
+    { id: 'stat-boosts-num', val: stats.boostCount, suffix: '', color: 'red' },
+    { id: 'stat-staff-num', val: stats.staffCount, suffix: '', color: 'blue' }
+  ];
+  slots.forEach(({ id, val, suffix, color }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    // Remove skeleton classes
+    el.classList.remove('skeleton', 'stat-skeleton-num');
+    animateCounter(el, val, suffix, 1800, color);
+  });
+  const membersSub = document.getElementById('stat-members-sub');
+  if (membersSub) membersSub.textContent = 'Growing every day';
+  const boostSub = document.getElementById('stat-boosts-sub');
+  if (boostSub) boostSub.textContent = status.online ? 'Server is online' : 'Server status unknown';
+
+  // --- CTA COUNT ---
+  const ctaCount = document.getElementById('cta-member-count');
+  if (ctaCount) ctaCount.textContent = stats.memberCount.toLocaleString() + '+ members';
+
+  // --- LIVE STATUS BANNER ---
+  const statusWrap = document.getElementById('discord-live-status-wrap');
+  if (statusWrap) {
+    const cls = status.online ? 'online' : 'offline';
+    const icon = status.online ? '🟢' : '🔴';
+    const label = status.online ? 'Discord Online' : 'Discord Offline';
+    statusWrap.innerHTML = `
+      <div class="discord-live-status-banner ${cls}">
+        <span class="status-indicator"></span>
+        ${icon} ${label}
+      </div>`;
+  }
+})();
+
+// =================== STAFF CARD BUILDER ===================
+function buildStaffCard(member, config, index) {
+  const delayMap = ['0s', '0.1s', '0.2s'];
+  const delay = delayMap[index] || '0s';
+  const accentClass = config.accent; // 'red' or 'blue'
+
+  const statusClass = member?.status || 'offline';
+  const avatarUrl = member?.avatar || null;
+
+  const avatarHtml = avatarUrl
+    ? `<div class="team-avatar-photo-wrap">
+         <div class="avatar-ring"></div>
+         <img src="${avatarUrl}" alt="${config.username}" class="team-avatar-photo" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'team-avatar ${accentClass}\\'><div class=\\'avatar-ring\\'></div>${config.username.charAt(0)}</div>'" />
+         <div class="discord-status-ring ${statusClass}"></div>
+       </div>`
+    : `<div class="team-avatar ${accentClass}">
+         <div class="avatar-ring"></div>
+         ${config.username.charAt(0).toUpperCase()}
+       </div>`;
+
+  const socialIcons = [];
+  if (config.socials.discord) socialIcons.push(`<a href="https://discord.com/users/${member?.id || ''}" target="_blank" rel="noopener" class="team-social-link" title="Discord"><i class="fab fa-discord"></i></a>`);
+  if (config.socials.github) socialIcons.push(`<a href="https://github.com/${config.username}" target="_blank" rel="noopener" class="team-social-link" title="GitHub"><i class="fab fa-github"></i></a>`);
+  if (config.socials.twitter) socialIcons.push(`<a href="https://x.com/${config.username}" target="_blank" rel="noopener" class="team-social-link" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>`);
+  if (config.socials.youtube) socialIcons.push(`<a href="https://youtube.com/@${config.username}" target="_blank" rel="noopener" class="team-social-link" title="YouTube"><i class="fab fa-youtube"></i></a>`);
+
+  return `
+    <div class="team-card reveal visible" style="transition-delay:${delay}">
+      <div class="team-avatar-wrap">
+        ${avatarHtml}
+      </div>
+      <div class="team-info">
+        <div class="team-name">${member?.username || config.username}</div>
+        <div class="team-role ${accentClass}">${config.role}</div>
+        <div class="team-bio">${config.bio}</div>
+        <div class="team-socials">
+          ${socialIcons.join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+async function initStaffCards() {
+  const grid = document.getElementById('team-grid');
+  if (!grid) return;
+
+  const apiData = await VAMPApi.fetchStaff();
+
+  // Map api results by username for quick lookup (case-insensitive)
+  const apiMap = {};
+  if (Array.isArray(apiData)) {
+    apiData.forEach(m => { apiMap[m.username.toLowerCase()] = m; });
+  }
+
+  const html = STAFF_CONFIG.map((config, i) => {
+    const matched = apiMap[config.username.toLowerCase()] || null;
+    return buildStaffCard(matched, config, i);
+  }).join('');
+
+  // Fade transition
+  grid.style.opacity = '0';
+  grid.style.transition = 'opacity 0.5s ease';
+  setTimeout(() => {
+    grid.innerHTML = html;
+    grid.style.opacity = '1';
+    // Re-bind hover glow to new cards
+    grid.querySelectorAll('.team-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.background = `radial-gradient(300px circle at ${x}px ${y}px, rgba(37,99,235,0.05), var(--bg-card) 70%)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.background = ''; });
+    });
+  }, 300);
+}
+initStaffCards();
+
+// =================== DISCORD AUTH SYSTEM ===================
+const VAMPAuth = {
+  _user: null,
+  _loading: false,
+
+  async init() {
+    const user = await VAMPApi.fetchUserProfile();
+    this._user = user;
+    this.renderNav(user);
+  },
+
+  renderNav(user) {
+    const area = document.getElementById('nav-auth-area');
+    if (!area) return;
+    if (user) {
+      const avatarHtml = user.avatar
+        ? `<img src="${user.avatar}" alt="" class="auth-avatar" onerror="this.outerHTML='<i class=\\'fab fa-discord\\'></i>'" />`
+        : `<i class="fab fa-discord"></i>`;
+      area.innerHTML = `
+        <button class="btn-nav-auth" onclick="VAMPDash.open()" title="Open dashboard">
+          ${avatarHtml}
+          ${user.username}
+          <i class="fas fa-chevron-down" style="font-size:0.65rem;opacity:0.6"></i>
+        </button>`;
+    } else {
+      area.innerHTML = `
+        <button class="btn-nav-auth" id="btn-discord-login" onclick="VAMPAuth.login()">
+          <i class="fab fa-discord"></i> Login with Discord
+        </button>`;
+    }
+  },
+
+  login() {
+    const btn = document.getElementById('btn-discord-login');
+    if (btn) {
+      btn.classList.add('loading');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+    }
+    // Redirect to backend OAuth2 endpoint
+    window.location.href = '/api/auth/discord';
+  },
+
+  logout() {
+    VAMPDash.close();
+    this._user = null;
+    this.renderNav(null);
+    fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+      .catch(() => {});
+    VAMPToast.show('Signed out successfully.', 'blue');
+  },
+
+  openDiscord() {
+    window.open('https://discord.gg/vamp', '_blank', 'noopener');
+  }
+};
+
+// =================== DASHBOARD SYSTEM ===================
+const VAMPDash = {
+  async open() {
+    const modal = document.getElementById('dashboard-modal');
+    if (!modal) return;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    await this.populate();
+  },
+
+  close() {
+    const modal = document.getElementById('dashboard-modal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  },
+
+  async refresh() {
+    const user = await VAMPApi.fetchUserProfile();
+    VAMPAuth._user = user;
+    VAMPAuth.renderNav(user);
+    await this.populate();
+    VAMPToast.show('Dashboard refreshed.', 'blue');
+  },
+
+  async populate() {
+    const user = VAMPAuth._user;
+    if (!user) { this.close(); return; }
+
+    // Profile row
+    const avatarEl = document.getElementById('dashboard-profile-row');
+    if (avatarEl) {
+      const avatarHtml = user.avatar
+        ? `<img src="${user.avatar}" alt="" class="dashboard-profile-avatar" onerror="this.outerHTML='<div class=\\'dashboard-profile-avatar-placeholder\\'><i class=\\'fab fa-discord\\'></i></div>'" />`
+        : `<div class="dashboard-profile-avatar-placeholder"><i class="fab fa-discord"></i></div>`;
+      avatarEl.innerHTML = `
+        ${avatarHtml}
+        <div>
+          <div class="dashboard-profile-name">${user.username}</div>
+          <div class="dashboard-profile-sub" style="color:#7289da">@${user.username.toLowerCase()}</div>
+          <div class="dashboard-profile-id">ID: ${user.id || '—'}</div>
+        </div>
+        <span class="dashboard-role-badge ${this._roleColor(user.role)}">${user.role || 'Member'}</span>`;
+    }
+
+    // Info cells
+    const sinceEl = document.getElementById('dash-since');
+    if (sinceEl) sinceEl.textContent = user.joinedAt ? new Date(user.joinedAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'short' }) : 'Early Member';
+    const idCell = document.getElementById('dash-id-cell');
+    if (idCell) idCell.textContent = user.id || '—';
+    const networkRole = document.getElementById('dash-network-role');
+    if (networkRole) networkRole.textContent = user.role || 'Community Member';
+
+    // Minecraft link status
+    await this.populateLinkStatus();
+  },
+
+  _roleColor(role) {
+    if (!role) return 'gray';
+    const r = role.toLowerCase();
+    if (r === 'owner') return 'red';
+    if (r === 'founder' || r === 'developer' || r === 'lead developer') return 'blue';
+    return 'gray';
+  },
+
+  async populateLinkStatus() {
+    const card = document.getElementById('link-status-card');
+    if (!card) return;
+
+    // Show skeleton during fetch
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="skeleton" style="width:40px;height:40px;border-radius:10px;flex-shrink:0"></div>
+        <div style="flex:1">
+          <div class="skeleton skeleton-line short" style="margin-bottom:6px"></div>
+          <div class="skeleton skeleton-line" style="width:45%"></div>
+        </div>
+      </div>`;
+
+    const linkData = await VAMPApi.fetchLinkStatus();
+
+    if (linkData?.linked && linkData.minecraftUsername) {
+      card.innerHTML = `
+        <div class="link-connected">
+          <div class="link-connected-icon"><i class="fas fa-check"></i></div>
+          <div style="flex:1">
+            <div class="link-connected-name">${linkData.minecraftUsername}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+              <span class="link-connected-badge">✓ Account Linked</span>
+              <span style="font-size:0.72rem;color:var(--gray-dark)">UUID: ${(linkData.minecraftUuid || '').substring(0,8)}...</span>
+            </div>
+          </div>
+          <button class="link-code-copy" onclick="VAMPDash.unlinkMinecraft()" style="color:var(--red-light);border-color:rgba(220,38,38,0.2);background:rgba(220,38,38,0.06)">Unlink</button>
+        </div>`;
+    } else {
+      card.innerHTML = `
+        <div class="link-unconnected">
+          <div style="font-size:0.88rem;font-weight:600;margin-bottom:6px">No Minecraft Account Linked</div>
+          <p class="link-instruction">Link your Minecraft account to unlock exclusive perks and sync your stats.</p>
+          <div id="link-code-area"></div>
+          <button class="btn-generate-code" id="btn-gen-code" onclick="VAMPDash.generateCode()">
+            <i class="fas fa-link"></i> Generate Link Code
+          </button>
+        </div>`;
+    }
+  },
+
+  async generateCode() {
+    const btn = document.getElementById('btn-gen-code');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...'; }
+
+    const result = await VAMPApi.generateLinkCode();
+    const codeArea = document.getElementById('link-code-area');
+
+    if (result?.code && codeArea) {
+      codeArea.innerHTML = `
+        <div class="link-code-box">
+          <span class="link-code">${result.code}</span>
+          <button class="link-code-copy" onclick="VAMPDash.copyCode('${result.code}')"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <p class="link-instruction">
+          Join our Minecraft server and run:<br>
+          <code>/link ${result.code}</code><br>
+          Code expires in <strong>${result.expiresIn || '10 minutes'}</strong>.
+        </p>`;
+    } else if (codeArea) {
+      codeArea.innerHTML = `<p class="link-instruction" style="color:var(--red-light)"><i class="fas fa-exclamation-triangle"></i> Failed to generate code. Please try again.</p>`;
+    }
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sync-alt"></i> Regenerate'; }
+  },
+
+  async unlinkMinecraft() {
+    if (!confirm('Unlink your Minecraft account?')) return;
+    try {
+      await fetch('/api/link/unlink', { method: 'DELETE', credentials: 'include' });
+      await this.populateLinkStatus();
+      VAMPToast.show('Minecraft account unlinked.', 'blue');
+    } catch {
+      VAMPToast.show('Failed to unlink. Try again.', 'red');
+    }
+  },
+
+  copyCode(code) {
+    navigator.clipboard.writeText('/link ' + code).then(() => {
+      VAMPToast.show('Copied /link ' + code + ' to clipboard!', 'blue');
+    }).catch(() => {
+      VAMPToast.show('Copy failed — please copy manually.', 'red');
+    });
+  }
+};
+
+// =================== TOAST UTILITY ===================
+const VAMPToast = {
+  show(msg, type = 'blue') {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toast-msg');
+    if (!toast || !toastMsg) return;
+    toastMsg.textContent = msg;
+    toast.style.borderColor = type === 'red' ? 'var(--border-red)' : 'var(--border-blue)';
+    toast.querySelector('.toast-icon').style.color = type === 'red' ? 'var(--red-light)' : 'var(--blue-light)';
+    toast.classList.add('show');
+    clearTimeout(this._t);
+    this._t = setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+};
+
+// Dashboard modal close events
+document.getElementById('dashboard-close-btn')?.addEventListener('click', () => VAMPDash.close());
+document.getElementById('dashboard-backdrop')?.addEventListener('click', () => VAMPDash.close());
+document.addEventListener('keydown', e => { if (e.key === 'Escape') VAMPDash.close(); });
+
+// Initialize auth on page load
+window.addEventListener('DOMContentLoaded', () => VAMPAuth.init());
+
+// =================== END OF DISCORD INTEGRATION ===================
+
 (function() {
   const bar = document.getElementById('loading-bar');
   const status = document.getElementById('loading-status');
