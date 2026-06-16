@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rules — VAMP Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --bg-primary:   #050505;
+    --bg-secondary: #0f0f0f;
+    --bg-card:      #141414;
+    --blue:         #2563eb;
+    --blue-light:   #3b82f6;
+    --blue-dim:     #1d4ed8;
+    --red:          #dc2626;
+    --red-light:    #ef4444;
+    --white:        #ffffff;
+    --gray:         #b3b3b3;
+    --gray-dark:    #555;
+    --border:       rgba(255,255,255,0.07);
+    --border-blue:  rgba(37,99,235,0.3);
+    --border-red:   rgba(220,38,38,0.3);
+    --yellow:       #f59e0b;
+    --green:        #10b981;
+    --orange:       #f97316;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  #navbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 18px 0;
+    transition: background 0.4s, padding 0.4s, border-color 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  #navbar.scrolled {
+    background: rgba(5,5,5,0.93);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    padding: 12px 0;
+    border-color: var(--border);
+  }
+  .nav-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    color: var(--white);
+  }
+  .nav-logo .v { color: var(--red); }
+  .nav-logo .a { color: var(--blue); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .btn-back:hover { color: var(--white); border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.04); }
+  .btn-discord-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 8px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .btn-discord-nav:hover { background: var(--blue-dim); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,0.35); }
+
+  /* ── HERO ── */
+  #rules-hero {
+    min-height: 42vh;
+    display: flex;
+    align-items: flex-end;
+    padding: 120px 32px 64px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(37,99,235,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37,99,235,0.035) 1px, transparent 1px);
+    background-size: 52px 52px;
+    animation: gridScroll 18s linear infinite;
+  }
+  @keyframes gridScroll {
+    0%   { transform: translate(0,0); }
+    100% { transform: translate(52px,52px); }
+  }
+  .hero-glow-l {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(220,38,38,0.09) 0%, transparent 70%);
+    top: -200px; left: -100px;
+    border-radius: 50%;
+    animation: floatGlow 9s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .hero-glow-r {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%);
+    top: -100px; right: -80px;
+    border-radius: 50%;
+    animation: floatGlow 7s ease-in-out infinite reverse;
+    pointer-events: none;
+  }
+  @keyframes floatGlow {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50%       { transform: scale(1.12); opacity: 1; }
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1320px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red-light);
+    margin-bottom: 18px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.15s forwards;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 18px; height: 1.5px;
+    background: var(--red-light);
+  }
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+  .hero-title .accent-r { color: var(--red); }
+  .hero-title .accent-b { color: var(--blue); }
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.45s forwards;
+  }
+  .hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--gray);
+  }
+  .hero-meta-item i { color: var(--blue-light); font-size: 0.75rem; }
+  .hero-divider { width: 1px; height: 16px; background: var(--border); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── LAYOUT ── */
+  .rules-layout {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 64px 32px 120px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* ── SIDEBAR ── */
+  .rules-sidebar {
+    position: sticky;
+    top: 96px;
+  }
+  .sidebar-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+  .sidebar-nav { display: flex; flex-direction: column; gap: 3px; }
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    text-decoration: none;
+    color: var(--gray);
+    font-size: 0.84rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+    border: 1px solid transparent;
+    position: relative;
+  }
+  .sidebar-link:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+  .sidebar-link.active {
+    background: rgba(37,99,235,0.1);
+    color: var(--white);
+    border-color: rgba(37,99,235,0.2);
+  }
+  .sidebar-link .cat-icon {
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem;
+    flex-shrink: 0;
+  }
+  .sidebar-link .rule-count {
+    margin-left: auto;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--gray-dark);
+    background: rgba(255,255,255,0.05);
+    border-radius: 100px;
+    padding: 2px 8px;
+  }
+  .sidebar-link.active .rule-count { color: var(--blue-light); background: rgba(37,99,235,0.15); }
+
+  .sidebar-quick {
+    margin-top: 28px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sidebar-quick::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--red), var(--blue));
+  }
+  .sidebar-quick-title { font-size: 0.78rem; font-weight: 700; margin-bottom: 12px; }
+  .sidebar-quick-links { display: flex; flex-direction: column; gap: 8px; }
+  .sidebar-quick-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.2s;
+  }
+  .sidebar-quick-link i { font-size: 0.72rem; color: var(--blue-light); }
+  .sidebar-quick-link:hover { color: var(--white); }
+
+  /* ── RULES CONTENT ── */
+  .rules-content { min-width: 0; }
+
+  /* Alert banner */
+  .rules-alert {
+    background: rgba(245,158,11,0.07);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  .rules-alert-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(245,158,11,0.12);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--yellow);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .rules-alert-text { font-size: 0.84rem; color: var(--gray); line-height: 1.7; }
+  .rules-alert-text strong { color: var(--white); }
+
+  /* Category section */
+  .rule-category {
+    margin-bottom: 56px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .rule-category.visible { opacity: 1; transform: translateY(0); }
+
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-header-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .cat-header-icon.red   { background: rgba(220,38,38,0.12); color: var(--red-light); border: 1px solid rgba(220,38,38,0.2); }
+  .cat-header-icon.blue  { background: rgba(37,99,235,0.12); color: var(--blue-light); border: 1px solid rgba(37,99,235,0.2); }
+  .cat-header-icon.yellow{ background: rgba(245,158,11,0.1); color: var(--yellow); border: 1px solid rgba(245,158,11,0.2); }
+  .cat-header-icon.green { background: rgba(16,185,129,0.1); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+  .cat-header-icon.orange{ background: rgba(249,115,22,0.1); color: var(--orange); border: 1px solid rgba(249,115,22,0.2); }
+  .cat-header-icon.purple{ background: rgba(139,92,246,0.1); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
+
+  .cat-header-text {}
+  .cat-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 2px;
+  }
+  .cat-desc { font-size: 0.8rem; color: var(--gray); }
+  .cat-rule-count {
+    margin-left: auto;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px 12px;
+    white-space: nowrap;
+  }
+
+  /* Individual rule card */
+  .rule-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    position: relative;
+  }
+  .rule-card:hover { border-color: rgba(255,255,255,0.12); box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
+  .rule-card-left-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+  }
+  .rule-card-left-bar.red    { background: var(--red); }
+  .rule-card-left-bar.blue   { background: var(--blue); }
+  .rule-card-left-bar.yellow { background: var(--yellow); }
+  .rule-card-left-bar.green  { background: var(--green); }
+  .rule-card-left-bar.orange { background: var(--orange); }
+  .rule-card-left-bar.purple { background: #8b5cf6; }
+
+  .rule-card-inner {
+    padding: 18px 20px 18px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .rule-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--gray-dark);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+    margin-top: 1px;
+    min-width: 46px;
+    text-align: center;
+  }
+  .rule-body { flex: 1; min-width: 0; }
+  .rule-title { font-size: 0.92rem; font-weight: 700; margin-bottom: 5px; line-height: 1.3; }
+  .rule-text { font-size: 0.82rem; color: var(--gray); line-height: 1.7; }
+  .rule-text strong { color: var(--white); font-weight: 600; }
+  .rule-text code {
+    background: rgba(37,99,235,0.1);
+    color: var(--blue-light);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: monospace;
+    font-size: 0.88em;
+    border: 1px solid rgba(37,99,235,0.15);
+  }
+  .rule-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .rule-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 100px;
+    border: 1px solid transparent;
+  }
+  .rule-tag.warn   { background: rgba(245,158,11,0.1); color: var(--yellow); border-color: rgba(245,158,11,0.2); }
+  .rule-tag.mute   { background: rgba(249,115,22,0.1); color: var(--orange); border-color: rgba(249,115,22,0.2); }
+  .rule-tag.kick   { background: rgba(139,92,246,0.1); color: #a78bfa; border-color: rgba(139,92,246,0.2); }
+  .rule-tag.tempban{ background: rgba(220,38,38,0.1); color: var(--red-light); border-color: rgba(220,38,38,0.2); }
+  .rule-tag.ban    { background: rgba(220,38,38,0.15); color: #ff6b6b; border-color: rgba(220,38,38,0.35); }
+  .rule-tag.perm   { background: rgba(5,5,5,0.6); color: #ff4444; border-color: rgba(220,38,38,0.5); }
+  .rule-tag.info   { background: rgba(37,99,235,0.1); color: var(--blue-light); border-color: rgba(37,99,235,0.2); }
+  .rule-tag.good   { background: rgba(16,185,129,0.1); color: var(--green); border-color: rgba(16,185,129,0.2); }
+
+  /* Punishment severity indicator */
+  .severity-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .severity-label { font-size: 0.67rem; color: var(--gray-dark); font-weight: 600; margin-right: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .severity-pip {
+    width: 18px; height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.07);
+  }
+  .severity-pip.filled.l1 { background: var(--green); }
+  .severity-pip.filled.l2 { background: var(--yellow); }
+  .severity-pip.filled.l3 { background: var(--orange); }
+  .severity-pip.filled.l4 { background: var(--red-light); }
+  .severity-pip.filled.l5 { background: #ff4444; box-shadow: 0 0 6px rgba(255,68,68,0.5); }
+
+  /* ── PUNISHMENT TABLE ── */
+  .punish-table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 56px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .punish-table-wrap.visible { opacity: 1; transform: translateY(0); }
+  .punish-table-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .punish-table-title { font-family: 'Space Grotesk',sans-serif; font-size: 1rem; font-weight: 700; }
+  .punish-table-sub { font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+  .pt-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: rgba(220,38,38,0.1);
+    border: 1px solid rgba(220,38,38,0.2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red-light);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  table.punish-table { width: 100%; border-collapse: collapse; }
+  table.punish-table thead tr { background: rgba(255,255,255,0.02); }
+  table.punish-table th {
+    text-align: left;
+    padding: 12px 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    border-bottom: 1px solid var(--border);
+  }
+  table.punish-table td {
+    padding: 14px 20px;
+    font-size: 0.83rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+  table.punish-table tr:last-child td { border-bottom: none; }
+  table.punish-table tbody tr { transition: background 0.15s; }
+  table.punish-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+  .offense-name { font-weight: 600; }
+  .offense-sub { font-size: 0.73rem; color: var(--gray-dark); margin-top: 2px; }
+
+  /* ── APPEAL SECTION ── */
+  .appeal-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-blue);
+    border-radius: 16px;
+    padding: 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 56px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .appeal-card.visible { opacity: 1; transform: translateY(0); }
+  .appeal-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), var(--red), transparent);
+  }
+  .appeal-card-glow {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .appeal-icon {
+    width: 60px; height: 60px;
+    border-radius: 18px;
+    background: rgba(37,99,235,0.1);
+    border: 1px solid rgba(37,99,235,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    color: var(--blue-light);
+    margin: 0 auto 20px;
+  }
+  .appeal-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .appeal-desc { font-size: 0.88rem; color: var(--gray); max-width: 460px; margin: 0 auto 28px; line-height: 1.75; }
+  .btn-appeal {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--blue);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 700;
+    padding: 13px 28px;
+    border-radius: 10px;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+  .btn-appeal:hover { background: var(--blue-dim); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.38); }
+
+  /* ── LAST UPDATED BAR ── */
+  .updated-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+  .updated-bar-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px rgba(16,185,129,0.6); animation: statusBlink 2s ease-in-out infinite; flex-shrink: 0; }
+  @keyframes statusBlink { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .updated-bar-text { font-size: 0.8rem; color: var(--gray); }
+  .updated-bar-text strong { color: var(--white); }
+  .updated-bar-version {
+    margin-left: auto;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(37,99,235,0.1);
+    color: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.2);
+    border-radius: 100px;
+    padding: 3px 12px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+  }
+  .footer-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    color: var(--white);
+  }
+  .footer-logo .v { color: var(--red); }
+  .footer-logo .a { color: var(--blue); }
+  .footer-copy { font-size: 0.78rem; color: var(--gray-dark); }
+  .footer-links { display: flex; gap: 16px; }
+  .footer-links a { color: var(--gray-dark); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--gray); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .rules-layout { grid-template-columns: 1fr; gap: 32px; }
+    .rules-sidebar { position: static; }
+    .sidebar-nav { display: grid; grid-template-columns: repeat(2,1fr); gap: 6px; }
+  }
+  @media (max-width: 600px) {
+    #rules-hero { padding: 100px 20px 48px; }
+    .rules-layout { padding: 40px 20px 80px; }
+    .nav-inner { padding: 0 20px; }
+    .sidebar-nav { grid-template-columns: 1fr; }
+    .rule-card-inner { flex-direction: column; gap: 10px; }
+    .cat-rule-count { display: none; }
+    table.punish-table th:nth-child(3),
+    table.punish-table td:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =================== NAVBAR =================== -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="v">V</span><span class="a">A</span>MP</a>
+    <div class="nav-right">
+      <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Home</a>
+      <a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener" class="btn-discord-nav">
+        <i class="fab fa-discord"></i> Join Discord
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- =================== HERO =================== -->
+<section id="rules-hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow-l"></div>
+  <div class="hero-glow-r"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><i class="fas fa-shield-halved"></i> Community Standards</div>
+    <h1 class="hero-title">
+      <span class="accent-r">Rules</span> &<br><span class="accent-b">Guidelines</span>
+    </h1>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><i class="fas fa-calendar-alt"></i> Last updated June 2026-27</div>
+      <div class="hero-divider"></div>
+      <div class="hero-meta-item"><i class="fas fa-list-check"></i> 40 rules across 8 categories</div>
+      <div class="hero-divider"></div>
+      <div class="hero-meta-item"><i class="fas fa-globe"></i> Applies to all VAMP platforms</div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== MAIN LAYOUT =================== -->
+<div class="rules-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="rules-sidebar">
+    <div class="sidebar-label">Categories</div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <a href="#general" class="sidebar-link active" data-section="general">
+        <div class="cat-icon" style="background:rgba(37,99,235,0.1);color:var(--blue-light)"><i class="fas fa-scroll"></i></div>
+        General
+        <span class="rule-count">7</span>
+      </a>
+      <a href="#chat" class="sidebar-link" data-section="chat">
+        <div class="cat-icon" style="background:rgba(16,185,129,0.1);color:var(--green)"><i class="fas fa-comments"></i></div>
+        Chat
+        <span class="rule-count">6</span>
+      </a>
+      <a href="#gameplay" class="sidebar-link" data-section="gameplay">
+        <div class="cat-icon" style="background:rgba(245,158,11,0.1);color:var(--yellow)"><i class="fas fa-gamepad"></i></div>
+        Gameplay
+        <span class="rule-count">6</span>
+      </a>
+      <a href="#pvp" class="sidebar-link" data-section="pvp">
+        <div class="cat-icon" style="background:rgba(220,38,38,0.1);color:var(--red-light)"><i class="fas fa-crosshairs"></i></div>
+        PvP
+        <span class="rule-count">5</span>
+      </a>
+      <a href="#building" class="sidebar-link" data-section="building">
+        <div class="cat-icon" style="background:rgba(139,92,246,0.1);color:#a78bfa"><i class="fas fa-hammer"></i></div>
+        Building
+        <span class="rule-count">4</span>
+      </a>
+      <a href="#discord" class="sidebar-link" data-section="discord">
+        <div class="cat-icon" style="background:rgba(88,101,242,0.12);color:#7289da"><i class="fab fa-discord"></i></div>
+        Discord
+        <span class="rule-count">5</span>
+      </a>
+      <a href="#staff" class="sidebar-link" data-section="staff">
+        <div class="cat-icon" style="background:rgba(249,115,22,0.1);color:var(--orange)"><i class="fas fa-user-shield"></i></div>
+        Staff
+        <span class="rule-count">4</span>
+      </a>
+      <a href="#punishments" class="sidebar-link" data-section="punishments">
+        <div class="cat-icon" style="background:rgba(220,38,38,0.1);color:var(--red-light)"><i class="fas fa-gavel"></i></div>
+        Punishments
+        <span class="rule-count">3</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-quick">
+      <div class="sidebar-quick-title">Quick Links</div>
+      <div class="sidebar-quick-links">
+        <a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener" class="sidebar-quick-link">
+          <i class="fab fa-discord"></i> Appeal a ban
+        </a>
+        <a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener" class="sidebar-quick-link">
+          <i class="fas fa-flag"></i> Report a player
+        </a>
+        <a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener" class="sidebar-quick-link">
+          <i class="fas fa-question-circle"></i> Ask staff
+        </a>
+        <a href="index.html#faq" class="sidebar-quick-link">
+          <i class="fas fa-circle-info"></i> FAQ
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RULES CONTENT -->
+  <main class="rules-content">
+
+    <div class="updated-bar">
+      <div class="updated-bar-dot"></div>
+      <div class="updated-bar-text"><strong>These rules are active</strong> — they apply to all VAMP Network platforms including the Minecraft server, Discord, and any future services.</div>
+      <div class="updated-bar-version">v2.1</div>
+    </div>
+
+    <div class="rules-alert">
+      <div class="rules-alert-icon"><i class="fas fa-triangle-exclamation"></i></div>
+      <div class="rules-alert-text">
+        <strong>Ignorance is not an excuse.</strong> By participating in VAMP Network on any platform, you agree to follow these rules in full. Staff have the final say in all moderation decisions. Rules may be updated at any time — check back regularly and watch <strong>#announcements</strong> in Discord.
+      </div>
+    </div>
+
+    <!-- ══════════ GENERAL ══════════ -->
+    <section id="general" class="rule-category">
+      <div class="cat-header">
+        <div class="cat-header-icon blue"><i class="fas fa-scroll"></i></div>
+        <div class="cat-header-text">
+          <div class="cat-name">General Conduct</div>
+          <div class="cat-desc">The foundation. These apply everywhere on VAMP Network.</div>
+        </div>
+        <div class="cat-rule-count">7 rules</div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">G-1</div>
+          <div class="rule-body">
+            <div class="rule-title">Treat everyone with respect</div>
+            <div class="rule-text">All players, staff, and visitors deserve to be treated with basic human dignity. Harassment, bullying, discrimination, or targeted hate based on race, gender, religion, nationality, sexual orientation, or disability is strictly prohibited — in any language or context.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag tempban">Temp Ban</span><span class="rule-tag perm">Permanent Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">G-2</div>
+          <div class="rule-body">
+            <div class="rule-title">No cheating or exploiting of any kind</div>
+            <div class="rule-text">Using hacked clients, cheat software, macro scripts, autoclickers, or exploiting any bug, glitch, or unintended mechanic to gain an advantage over other players is forbidden. This includes using external modifications that alter gameplay in any way not explicitly permitted by VAMP Network.</div>
+            <div class="rule-tags"><span class="rule-tag ban">Temp Ban</span><span class="rule-tag perm">Permanent Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">G-3</div>
+          <div class="rule-body">
+            <div class="rule-title">No sharing of personal information</div>
+            <div class="rule-text">Do not share or request the real name, address, phone number, social media, or any other personal information of yourself or other players. Doxxing — intentionally revealing someone's private information — will result in an immediate permanent ban with no appeal.</div>
+            <div class="rule-tags"><span class="rule-tag perm">Permanent Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">G-4</div>
+          <div class="rule-body">
+            <div class="rule-title">No advertising other servers or services</div>
+            <div class="rule-text">Promoting other Minecraft servers, Discord communities, YouTube channels, or any paid service without prior written approval from VAMP Network ownership is not allowed. Sharing links to harmful or inappropriate websites will result in an immediate ban.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Temp Ban</span><span class="rule-tag perm">Perm Ban if Malicious</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">G-5</div>
+          <div class="rule-body">
+            <div class="rule-title">No account sharing or impersonation</div>
+            <div class="rule-text">Each Minecraft account and Discord account must be used by one person only. You are responsible for all activity on your account. Impersonating another player, staff member, or public figure — including using similar usernames or skins — is prohibited.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag kick">Kick</span><span class="rule-tag ban">Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">G-6</div>
+          <div class="rule-body">
+            <div class="rule-title">No real-money trading (RMT)</div>
+            <div class="rule-text">Selling, buying, or trading in-game items, currency, accounts, or rank upgrades for real money outside of the official VAMP Network store is strictly prohibited. Any transaction that bypasses the official store is considered RMT and will result in account action.</div>
+            <div class="rule-tags"><span class="rule-tag ban">Temp Ban</span><span class="rule-tag perm">Perm Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">G-7</div>
+          <div class="rule-body">
+            <div class="rule-title">Report bugs — don't exploit them</div>
+            <div class="rule-text">If you discover a bug, glitch, or exploit, report it immediately to staff via Discord using <code>#bug-reports</code>. Exploiting a known or unknown bug for personal gain — even once — is treated as cheating. Good-faith bug reporters may receive a reward.</div>
+            <div class="rule-tags"><span class="rule-tag good">Bug Bounty Available</span><span class="rule-tag ban">Ban if Exploited</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l1"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ CHAT ══════════ -->
+    <section id="chat" class="rule-category">
+      <div class="cat-header">
+        <div class="cat-header-icon green"><i class="fas fa-comments"></i></div>
+        <div class="cat-header-text">
+          <div class="cat-name">Chat Rules</div>
+          <div class="cat-desc">Applies to in-game chat, Discord messages, and all VAMP communication channels.</div>
+        </div>
+        <div class="cat-rule-count">6 rules</div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar green"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">C-1</div>
+          <div class="rule-body">
+            <div class="rule-title">No hate speech or slurs</div>
+            <div class="rule-text">Racial slurs, homophobic language, sexist remarks, ableist language, or any form of derogatory speech targeting a person or group is never acceptable. Context does not excuse it. Even "joking" use of slurs is a violation.</div>
+            <div class="rule-tags"><span class="rule-tag mute">Mute</span><span class="rule-tag tempban">Temp Ban</span><span class="rule-tag perm">Perm Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar green"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">C-2</div>
+          <div class="rule-body">
+            <div class="rule-title">No spamming or flooding</div>
+            <div class="rule-text">Sending the same or similar messages repeatedly, excessive use of CAPS LOCK, character spam (e.g. "aaaaaaa"), or any behavior that makes chat unusable for others is prohibited. This includes automated spam from scripts or bots.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag mute">Mute</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar green"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">C-3</div>
+          <div class="rule-body">
+            <div class="rule-title">No threats or intimidation</div>
+            <div class="rule-text">Threatening other players with in-game harm, doxxing threats, DDoS threats, or any statement intended to make someone feel unsafe is a serious violation. Threats are treated as real regardless of whether you intended to follow through.</div>
+            <div class="rule-tags"><span class="rule-tag perm">Permanent Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar green"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">C-4</div>
+          <div class="rule-body">
+            <div class="rule-title">Keep it age-appropriate</div>
+            <div class="rule-text">VAMP Network is played by people of all ages. Explicit sexual content, graphic violence in descriptions, or any content that would be considered NSFW is not permitted in any public chat. Keep discussions appropriate for a general audience at all times.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag mute">Mute</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar green"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">C-5</div>
+          <div class="rule-body">
+            <div class="rule-title">No false accusations against players or staff</div>
+            <div class="rule-text">Falsely accusing another player or staff member of hacking, cheating, or rule violations with no evidence — especially in public chat — undermines the community. If you have a genuine report, use <code>#player-reports</code> in Discord with evidence.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag mute">Mute</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar green"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">C-6</div>
+          <div class="rule-body">
+            <div class="rule-title">English in global chat</div>
+            <div class="rule-text">Global and public chat channels must be used in English so staff can moderate effectively. Private messages and party chats may use any language. If you need support in another language, let staff know in Discord and we'll do our best to accommodate you.</div>
+            <div class="rule-tags"><span class="rule-tag info">Polite Reminder</span><span class="rule-tag warn">Warning</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l1"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ GAMEPLAY ══════════ -->
+    <section id="gameplay" class="rule-category">
+      <div class="cat-header">
+        <div class="cat-header-icon yellow"><i class="fas fa-gamepad"></i></div>
+        <div class="cat-header-text">
+          <div class="cat-name">Gameplay Rules</div>
+          <div class="cat-desc">Rules that maintain fair and enjoyable gameplay for everyone.</div>
+        </div>
+        <div class="cat-rule-count">6 rules</div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar yellow"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">GP-1</div>
+          <div class="rule-body">
+            <div class="rule-title">No griefing outside designated PvP zones</div>
+            <div class="rule-text">Destroying, damaging, modifying, or stealing from another player's build, farm, or belongings without their explicit consent is griefing. This includes lava casting, flooding, and using TNT near player builds. Griefed items will be restored where possible and the griefer will be banned.</div>
+            <div class="rule-tags"><span class="rule-tag ban">Temp Ban</span><span class="rule-tag perm">Perm Ban if Severe</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar yellow"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">GP-2</div>
+          <div class="rule-body">
+            <div class="rule-title">No stealing from other players</div>
+            <div class="rule-text">Taking items from another player's unlocked chests, farms, or dropped items that clearly belong to someone else is stealing and is not permitted. "It wasn't locked" is not a valid defense. If you find an unprotected chest, report it to staff rather than taking the contents.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar yellow"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">GP-3</div>
+          <div class="rule-body">
+            <div class="rule-title">No AFK farming beyond reasonable limits</div>
+            <div class="rule-text">Automated AFK farming using macros, auto-clickers, or weight-on-key methods that allow indefinite resource accumulation while you're away from the keyboard is not permitted. Standard mob farms are fine. If you're AFK and gaining resources continuously, that's a violation.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag kick">Kick</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar yellow"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">GP-4</div>
+          <div class="rule-body">
+            <div class="rule-title">No trapping or luring players unfairly</div>
+            <div class="rule-text">Building traps designed to kill players outside of designated PvP areas, or luring players to their deaths through deception, is prohibited. This includes fake portals, pit traps disguised as paths, and any mechanism designed to kill unsuspecting players.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar yellow"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">GP-5</div>
+          <div class="rule-body">
+            <div class="rule-title">No market manipulation or scamming</div>
+            <div class="rule-text">Deliberately misleading other players in trades, misrepresenting item quality or quantity, bait-and-switch trades, and any form of in-game economic manipulation or scamming is prohibited. All trades are final once completed — staff will not reverse fair trades.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Temp Ban</span><span class="rule-tag perm">Perm if Repeated</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar yellow"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">GP-6</div>
+          <div class="rule-body">
+            <div class="rule-title">No lag machines or server disruption</div>
+            <div class="rule-text">Intentionally building structures designed to cause server lag — including excessive entity farms, recursive redstone loops, TNT cannons firing continuously, and similar constructions — will result in an immediate removal of the build and a ban.</div>
+            <div class="rule-tags"><span class="rule-tag ban">Temp Ban</span><span class="rule-tag perm">Perm Ban if Intentional</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ PVP ══════════ -->
+    <section id="pvp" class="rule-category">
+      <div class="cat-header">
+        <div class="cat-header-icon red"><i class="fas fa-crosshairs"></i></div>
+        <div class="cat-header-text">
+          <div class="cat-name">PvP Rules</div>
+          <div class="cat-desc">Combat is part of the experience — but it comes with boundaries.</div>
+        </div>
+        <div class="cat-rule-count">5 rules</div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar red"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">PV-1</div>
+          <div class="rule-body">
+            <div class="rule-title">PvP only in designated zones</div>
+            <div class="rule-text">Player vs. player combat is only permitted in clearly marked PvP zones. Attacking players outside of these areas — including spawn, market districts, and peaceful zones — is strictly prohibited. Zone boundaries are enforced by the server and by staff.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar red"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">PV-2</div>
+          <div class="rule-body">
+            <div class="rule-title">No spawn killing or camping</div>
+            <div class="rule-text">Repeatedly killing a player immediately after they respawn, or camping a spawn point to prevent a player from playing, is toxic and prohibited. Give players a fair chance to orient themselves and move away from spawn before engaging in combat.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag kick">Kick</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar red"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">PV-3</div>
+          <div class="rule-body">
+            <div class="rule-title">No teaming in solo modes</div>
+            <div class="rule-text">In solo game modes, coordinating or working with other players who are supposed to be opponents gives an unfair advantage. Teaming — including truce agreements, refusing to fight allies, or sharing information with opponents — is prohibited in solo modes.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar red"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">PV-4</div>
+          <div class="rule-body">
+            <div class="rule-title">No combat logging</div>
+            <div class="rule-text">Disconnecting from the server to avoid death during active combat — also known as "combat logging" — is prohibited and will be treated as if you died in combat, with any applicable penalties applied. The server logs all disconnections during combat.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar red"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">PV-5</div>
+          <div class="rule-body">
+            <div class="rule-title">Trash talk must stay sportsmanlike</div>
+            <div class="rule-text">Light competitive banter is part of gaming culture and is allowed. However, personal insults, slurs, or sustained targeted harassment following a match cross the line and are a violation of <strong>G-1</strong>. Winning doesn't license you to be abusive in victory.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag mute">Mute</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ BUILDING ══════════ -->
+    <section id="building" class="rule-category">
+      <div class="cat-header">
+        <div class="cat-header-icon purple"><i class="fas fa-hammer"></i></div>
+        <div class="cat-header-text">
+          <div class="cat-name">Building Rules</div>
+          <div class="cat-desc">Keep the world looking great for everyone.</div>
+        </div>
+        <div class="cat-rule-count">4 rules</div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar purple"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">B-1</div>
+          <div class="rule-body">
+            <div class="rule-title">No inappropriate structures</div>
+            <div class="rule-text">Building structures that are offensive, sexual, or designed to harass (e.g. hate symbols, genitalia, targeted build harassment) is strictly prohibited and will result in immediate removal of the build and a ban. Staff have the authority to remove any build deemed inappropriate without warning.</div>
+            <div class="rule-tags"><span class="rule-tag ban">Temp Ban</span><span class="rule-tag perm">Perm Ban if Targeted</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip filled l4"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar purple"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">B-2</div>
+          <div class="rule-body">
+            <div class="rule-title">Respect plot and claim boundaries</div>
+            <div class="rule-text">Do not build directly adjacent to another player's claim in a way that blocks their expansion, cuts off their access, or intentionally disrupts their build. Maintain a reasonable distance — at least 20 blocks — from any claimed land you don't own unless you have permission.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag kick">Build Removal</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar purple"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">B-3</div>
+          <div class="rule-body">
+            <div class="rule-title">No 1×1 towers or floating structures in shared zones</div>
+            <div class="rule-text">Leaving unfinished, unsightly, or abandoned structures in shared spaces — including 1×1 dirt towers, floating trees, and incomplete builds — is not allowed. You are responsible for cleaning up any temporary structures you make. Abandoned builds may be removed by staff.</div>
+            <div class="rule-tags"><span class="rule-tag info">Polite Request</span><span class="rule-tag warn">Warning</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l1"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar purple"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">B-4</div>
+          <div class="rule-body">
+            <div class="rule-title">Farms must be contained</div>
+            <div class="rule-text">All mob farms, animal farms, and item farms must be fully enclosed and contained within your claimed land. Animals, mobs, or items escaping your farm into shared or other players' territory is your responsibility. Large farms require staff approval — submit a request in Discord.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag kick">Farm Removal</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ DISCORD ══════════ -->
+    <section id="discord" class="rule-category">
+      <div class="cat-header">
+        <div class="cat-header-icon blue"><i class="fab fa-discord"></i></div>
+        <div class="cat-header-text">
+          <div class="cat-name">Discord Rules</div>
+          <div class="cat-desc">Additional rules specific to the VAMP Network Discord server.</div>
+        </div>
+        <div class="cat-rule-count">5 rules</div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">D-1</div>
+          <div class="rule-body">
+            <div class="rule-title">Use the right channels</div>
+            <div class="rule-text">Each channel has a topic — stay on topic. Don't post memes in <code>#announcements</code>, don't post bug reports in <code>#general</code>, and don't start support threads outside of <code>#support</code>. If you're unsure where something goes, ask in <code>#general</code> first.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag mute">Mute</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l1"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">D-2</div>
+          <div class="rule-body">
+            <div class="rule-title">No pinging staff without reason</div>
+            <div class="rule-text">Do not ping <code>@Staff</code>, <code>@Moderator</code>, or individual staff members unless you have a genuine, time-sensitive issue that cannot be resolved by reading the FAQ or waiting. Unnecessary pings will result in a warning. Emergency pings exist for real emergencies.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag mute">Temp Mute</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">D-3</div>
+          <div class="rule-body">
+            <div class="rule-title">No alt accounts in the Discord</div>
+            <div class="rule-text">Creating or using a secondary Discord account to bypass a mute, ban, or any other moderation action in the VAMP Discord will result in a permanent ban of all accounts. If you believe your punishment was unfair, use the official appeal process rather than evading it.</div>
+            <div class="rule-tags"><span class="rule-tag perm">Permanent Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">D-4</div>
+          <div class="rule-body">
+            <div class="rule-title">Keep DMs consensual</div>
+            <div class="rule-text">Do not send unsolicited direct messages to other members for advertising, begging for items, or any form of harassment. Harassment via DM is still harassment, and reports of DM abuse will be treated the same as public violations.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Server Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar blue"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">D-5</div>
+          <div class="rule-body">
+            <div class="rule-title">Respect voice channel etiquette</div>
+            <div class="rule-text">In voice channels: don't play loud audio, music, or soundboards without consent. Don't mic spam, earrape, or talk over others constantly. Staff voice channels are off-limits unless you're invited. Causing a disruptive experience in voice will result in a voice channel ban.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag mute">Voice Mute</span><span class="rule-tag kick">Voice Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l2"></div><div class="severity-pip filled l2"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ STAFF ══════════ -->
+    <section id="staff" class="rule-category">
+      <div class="cat-header">
+        <div class="cat-header-icon orange"><i class="fas fa-user-shield"></i></div>
+        <div class="cat-header-text">
+          <div class="cat-name">Staff Interactions</div>
+          <div class="cat-desc">How to work with, and what to expect from, the VAMP staff team.</div>
+        </div>
+        <div class="cat-rule-count">4 rules</div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar orange"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">S-1</div>
+          <div class="rule-body">
+            <div class="rule-title">Follow staff instructions</div>
+            <div class="rule-text">When a staff member issues an instruction, follow it. If you believe the instruction is unfair, follow it first and then raise a formal complaint through the proper channels. Refusing to comply with staff, arguing excessively in public, or being disrespectful to staff will escalate your punishment.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag kick">Kick</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar orange"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">S-2</div>
+          <div class="rule-body">
+            <div class="rule-title">Do not abuse the report system</div>
+            <div class="rule-text">Filing false or malicious reports against other players wastes staff time and undermines the system for genuine victims. If you file a report and it is found to be deliberately false, you will receive a punishment equal to what the accused would have received had the report been genuine.</div>
+            <div class="rule-tags"><span class="rule-tag warn">Warning</span><span class="rule-tag ban">Temp Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l3"></div><div class="severity-pip filled l3"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar orange"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">S-3</div>
+          <div class="rule-body">
+            <div class="rule-title">Staff decisions are final in-server</div>
+            <div class="rule-text">Staff decisions during active moderation are final in the moment. The correct path to challenge a decision is through a formal appeal or complaint — not by arguing in chat, DMing every staff member, or posting about it publicly. Appeals are reviewed by Senior Staff and are taken seriously.</div>
+            <div class="rule-tags"><span class="rule-tag info">Appeal via Discord</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l1"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div><div class="severity-pip"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar orange"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">S-4</div>
+          <div class="rule-body">
+            <div class="rule-title">Do not bribe or attempt to influence staff</div>
+            <div class="rule-text">Offering in-game items, real money, or any other incentive to staff members in exchange for preferential treatment, overlooking a violation, or unfair advantages is corruption and will result in a permanent ban. Staff are expected to refuse all such offers and report them immediately.</div>
+            <div class="rule-tags"><span class="rule-tag perm">Permanent Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ PUNISHMENTS TABLE ══════════ -->
+    <section id="punishments" class="rule-category">
+      <div class="cat-header">
+        <div class="cat-header-icon red"><i class="fas fa-gavel"></i></div>
+        <div class="cat-header-text">
+          <div class="cat-name">Punishments & Escalation</div>
+          <div class="cat-desc">How consequences are applied, escalated, and appealed.</div>
+        </div>
+        <div class="cat-rule-count">3 rules</div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar red"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">P-1</div>
+          <div class="rule-body">
+            <div class="rule-title">Punishments escalate with repeated offences</div>
+            <div class="rule-text">Most punishments follow a graduated system: <strong>Warning → Mute → Kick → Temp Ban → Permanent Ban</strong>. Each repeated violation of the same rule moves you one step up the ladder. Severe violations (e.g. doxxing, cheating, hate speech) skip directly to the highest tier.</div>
+            <div class="rule-tags"><span class="rule-tag info">Policy</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar red"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">P-2</div>
+          <div class="rule-body">
+            <div class="rule-title">Punishment evasion doubles the sentence</div>
+            <div class="rule-text">Using an alternate Minecraft account or Discord account to bypass a ban, mute, or any active punishment is considered punishment evasion. Both accounts will be permanently banned with no appeal window. The original punishment's duration is also doubled upon discovery of evasion.</div>
+            <div class="rule-tags"><span class="rule-tag perm">Permanent Ban</span></div>
+            <div class="severity-bar"><span class="severity-label">Severity</span><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div><div class="severity-pip filled l5"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-card-left-bar red"></div>
+        <div class="rule-card-inner">
+          <div class="rule-number">P-3</div>
+          <div class="rule-body">
+            <div class="rule-title">All punishments are logged and reviewable</div>
+            <div class="rule-text">Every warning, mute, kick, and ban is logged with a timestamp, reason, and the staff member who issued it. This ensures accountability on both sides. Punishment logs may be referenced in appeals. Any staff member who misuses their moderation powers is subject to demotion.</div>
+            <div class="rule-tags"><span class="rule-tag info">Transparency Policy</span><span class="rule-tag good">Appeals Welcome</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ PUNISHMENT QUICK REFERENCE ══════════ -->
+    <div class="punish-table-wrap" id="punish-table">
+      <div class="punish-table-header">
+        <div class="pt-icon"><i class="fas fa-table-list"></i></div>
+        <div>
+          <div class="punish-table-title">Punishment Quick Reference</div>
+          <div class="punish-table-sub">Common offences and their standard punishment tiers. Severity may increase with context.</div>
+        </div>
+      </div>
+      <table class="punish-table">
+        <thead>
+          <tr>
+            <th>Offence</th>
+            <th>First Offence</th>
+            <th>Repeat Offence</th>
+            <th>Severe / Intentional</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="offense-name">Hacking / Cheating</div><div class="offense-sub">Any modified client</div></td>
+            <td><span class="rule-tag ban" style="display:inline-block">30-Day Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+          </tr>
+          <tr>
+            <td><div class="offense-name">Griefing</div><div class="offense-sub">Destruction of player builds</div></td>
+            <td><span class="rule-tag ban" style="display:inline-block">7-Day Ban</span></td>
+            <td><span class="rule-tag ban" style="display:inline-block">30-Day Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+          </tr>
+          <tr>
+            <td><div class="offense-name">Hate Speech / Slurs</div><div class="offense-sub">Any slur or discriminatory language</div></td>
+            <td><span class="rule-tag mute" style="display:inline-block">1-Day Mute</span></td>
+            <td><span class="rule-tag ban" style="display:inline-block">7-Day Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+          </tr>
+          <tr>
+            <td><div class="offense-name">Spam / Flooding</div><div class="offense-sub">Repetitive chat abuse</div></td>
+            <td><span class="rule-tag warn" style="display:inline-block">Warning</span></td>
+            <td><span class="rule-tag mute" style="display:inline-block">1-Hour Mute</span></td>
+            <td><span class="rule-tag mute" style="display:inline-block">1-Day Mute</span></td>
+          </tr>
+          <tr>
+            <td><div class="offense-name">Advertising</div><div class="offense-sub">Promoting other servers</div></td>
+            <td><span class="rule-tag warn" style="display:inline-block">Warning</span></td>
+            <td><span class="rule-tag ban" style="display:inline-block">7-Day Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+          </tr>
+          <tr>
+            <td><div class="offense-name">Scamming</div><div class="offense-sub">Deceptive in-game trades</div></td>
+            <td><span class="rule-tag warn" style="display:inline-block">Warning + Rollback</span></td>
+            <td><span class="rule-tag ban" style="display:inline-block">7-Day Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+          </tr>
+          <tr>
+            <td><div class="offense-name">Doxxing / IRL Threats</div><div class="offense-sub">Sharing private information</div></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+          </tr>
+          <tr>
+            <td><div class="offense-name">Punishment Evasion</div><div class="offense-sub">Using alt accounts</div></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban (all accts)</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+          </tr>
+          <tr>
+            <td><div class="offense-name">Lag Machines</div><div class="offense-sub">Intentional server disruption</div></td>
+            <td><span class="rule-tag ban" style="display:inline-block">7-Day Ban</span></td>
+            <td><span class="rule-tag ban" style="display:inline-block">30-Day Ban</span></td>
+            <td><span class="rule-tag perm" style="display:inline-block">Perm Ban</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ══════════ APPEAL ══════════ -->
+    <div class="appeal-card" id="appeal-card">
+      <div class="appeal-card-glow"></div>
+      <div class="appeal-icon"><i class="fas fa-scale-balanced"></i></div>
+      <h2 class="appeal-title">Think your punishment was unfair?</h2>
+      <p class="appeal-desc">Every punishment can be appealed. Head to our Discord, open a ticket in <strong>#appeals</strong>, and a Senior Staff member will review your case fairly and without bias. We take appeals seriously — good-faith appeals are always given a proper review.</p>
+      <a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener" class="btn-appeal">
+        <i class="fab fa-discord"></i> Open an Appeal
+      </a>
+    </div>
+
+  </main>
+</div>
+
+<!-- =================== FOOTER =================== -->
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo"><span class="v">V</span><span class="a">A</span>MP</a>
+    <div class="footer-copy">&copy; 2026-27 VAMP Network · Rules v2.1 · Last updated June 2026-27</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener">Discord</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Navbar scroll effect ──
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ── Scroll reveal ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.rule-category, .punish-table-wrap, .appeal-card').forEach(el => revealObserver.observe(el));
+
+// ── Sidebar active link on scroll ──
+const sections = document.querySelectorAll('.rule-category[id], #punish-table');
+const sidebarLinks = document.querySelectorAll('.sidebar-link[data-section]');
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      sidebarLinks.forEach(l => {
+        l.classList.toggle('active', l.dataset.section === id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+
+sections.forEach(s => sectionObserver.observe(s));
+
+// ── Smooth sidebar click scroll ──
+sidebarLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) window.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
