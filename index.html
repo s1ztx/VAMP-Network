@@ -1887,6 +1887,12 @@
     </ul>
     <div class="nav-cta">
       <a href="#contact" class="btn-nav-secondary">Contact</a>
+      <div id="nav-auth-area">
+        <!-- Populated by VAMPAuth.init() — shows Login or avatar+username -->
+        <button class="btn-nav-auth" id="btn-discord-login" onclick="VAMPAuth.login()">
+          <i class="fab fa-discord"></i>&nbsp; Login with Discord
+        </button>
+      </div>
       <a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener" class="btn-nav-primary">
         <i class="fab fa-discord"></i> Join Discord
       </a>
@@ -2960,13 +2966,24 @@ const VAMPApi = {
   },
 
   async fetchUserProfile() {
+    // Reads the user from the Discord API using the stored OAuth token.
+    // Called by VAMPAuth.init() — no backend required.
+    const token = localStorage.getItem('vamp_dc_token');
+    const expiry = parseInt(localStorage.getItem('vamp_dc_expiry') || '0');
+    if (!token || Date.now() >= expiry) return null;
     try {
-      const res = await fetch('/api/user/profile', {
-        credentials: 'include',
-        signal: AbortSignal.timeout(6000)
+      const res = await fetch('https://discord.com/api/users/@me', {
+        headers: { Authorization: `Bearer ${token}` },
+        signal: AbortSignal.timeout(7000)
       });
-      if (!res.ok) return null;
-      return await res.json();
+      if (!res.ok) {
+        localStorage.removeItem('vamp_dc_token');
+        localStorage.removeItem('vamp_dc_expiry');
+        return null;
+      }
+      const data = await res.json();
+      localStorage.setItem('vamp_dc_user', JSON.stringify(data));
+      return data;
     } catch { return null; }
   },
 
@@ -3217,43 +3234,98 @@ async function initStaffCards() {
 initStaffCards();
 
 // =================== DISCORD AUTH SYSTEM ===================
+// Full OAuth2 Implicit Grant — works entirely client-side on GitHub Pages.
+// Flow: Login → Discord → redirect back with #access_token in URL hash
+//       → store in localStorage → fetch discord.com/api/users/@me → show avatar
+
+const DISCORD_CLIENT_ID  = '1515227559917260810';
+const DISCORD_REDIRECT   = 'https://s1ztx.github.io/VAMP-Network/';
+const DISCORD_OAUTH_URL  =
+  `https://discord.com/api/oauth2/authorize` +
+  `?client_id=${DISCORD_CLIENT_ID}` +
+  `&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT)}` +
+  `&response_type=token` +
+  `&scope=identify`;
+
 const VAMPAuth = {
   _user: null,
-  _loading: false,
 
+  // ── Called once on DOMContentLoaded ──
   async init() {
+    // Step 1: catch the OAuth redirect (token in URL hash)
+    this._handleOAuthCallback();
+    // Step 2: try to restore session from localStorage
     const user = await VAMPApi.fetchUserProfile();
     this._user = user;
     this.renderNav(user);
   },
 
+  // Reads #access_token=...&expires_in=... from the URL after Discord redirects back
+  _handleOAuthCallback() {
+    const hash = window.location.hash;
+    if (!hash || !hash.includes('access_token=')) return;
+    const params = new URLSearchParams(hash.replace(/^#/, ''));
+    const token     = params.get('access_token');
+    const expiresIn = parseInt(params.get('expires_in') || '604800', 10);
+    if (!token) return;
+    localStorage.setItem('vamp_dc_token',  token);
+    localStorage.setItem('vamp_dc_expiry', String(Date.now() + expiresIn * 1000));
+    // Remove the token from the URL bar so it's not visible / accidentally shared
+    window.history.replaceState({}, document.title, window.location.pathname);
+  },
+
+  // Build the correct CDN avatar URL from Discord user object
+  avatarUrl(user) {
+    if (user.avatar) {
+      const ext = user.avatar.startsWith('a_') ? 'gif' : 'png';
+      return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=128`;
+    }
+    // New default-avatar system (no discriminator)
+    const idx = Number(BigInt(user.id) >> 22n) % 6;
+    return `https://cdn.discordapp.com/embed/avatars/${idx}.png`;
+  },
+
+  // ── Navbar render ──
   renderNav(user) {
     const area = document.getElementById('nav-auth-area');
     if (!area) return;
     if (user) {
-      const avatarHtml = user.avatar
-        ? `<img src="${user.avatar}" alt="" class="auth-avatar" />`
-        : `<i class="fab fa-discord"></i>`;
+      const av = this.avatarUrl(user);
+      const displayName = user.global_name || user.username;
       area.innerHTML = `
-        <button class="btn-nav-auth" onclick="VAMPDash.open()" title="Open dashboard">
-          ${avatarHtml}
-          ${user.username}
-          <i class="fas fa-chevron-down" style="font-size:0.65rem;opacity:0.6"></i>
+        <button class="btn-nav-auth" onclick="VAMPDash.open()" title="View your profile">
+          <img src="${av}" alt="${displayName}" class="auth-avatar"
+               onerror="this.outerHTML='<i class=\'fab fa-discord\'></i>'" />
+          ${displayName}
+          <i class="fas fa-chevron-down" style="font-size:0.6rem;opacity:0.55;margin-left:2px"></i>
         </button>`;
     } else {
-      area.innerHTML = '';
+      area.innerHTML = `
+        <button class="btn-nav-auth" id="btn-discord-login" onclick="VAMPAuth.login()">
+          <i class="fab fa-discord"></i>&nbsp; Login with Discord
+        </button>`;
     }
   },
 
+  // ── Redirect to Discord OAuth ──
   login() {
-    window.open('https://discord.gg/XWxtNzAH', '_blank', 'noopener');
+    const btn = document.getElementById('btn-discord-login');
+    if (btn) {
+      btn.classList.add('loading');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Connecting...';
+    }
+    window.location.href = DISCORD_OAUTH_URL;
   },
 
+  // ── Clear token + session ──
   logout() {
-    VAMPDash.close();
+    localStorage.removeItem('vamp_dc_token');
+    localStorage.removeItem('vamp_dc_expiry');
+    localStorage.removeItem('vamp_dc_user');
     this._user = null;
+    VAMPDash.close();
     this.renderNav(null);
-    VAMPToast.show('Signed out.', 'blue');
+    VAMPToast.show('Signed out successfully.', 'blue');
   },
 
   openDiscord() {
@@ -3283,7 +3355,7 @@ const VAMPDash = {
     const user = await VAMPApi.fetchUserProfile();
     VAMPAuth._user = user;
     VAMPAuth.renderNav(user);
-    await this.populate();
+    if (user) await this.populate();
     VAMPToast.show('Dashboard refreshed.', 'blue');
   },
 
@@ -3291,29 +3363,33 @@ const VAMPDash = {
     const user = VAMPAuth._user;
     if (!user) { this.close(); return; }
 
-    // Profile row
+    // Profile row — use Discord CDN for real avatar
     const avatarEl = document.getElementById('dashboard-profile-row');
     if (avatarEl) {
-      const avatarHtml = user.avatar
-        ? `<img src="${user.avatar}" alt="" class="dashboard-profile-avatar" onerror="this.outerHTML='<div class=\\'dashboard-profile-avatar-placeholder\\'><i class=\\'fab fa-discord\\'></i></div>'" />`
-        : `<div class="dashboard-profile-avatar-placeholder"><i class="fab fa-discord"></i></div>`;
+      const avUrl = VAMPAuth.avatarUrl(user);
+      const displayName = user.global_name || user.username;
       avatarEl.innerHTML = `
-        ${avatarHtml}
-        <div>
-          <div class="dashboard-profile-name">${user.username}</div>
-          <div class="dashboard-profile-sub" style="color:#7289da">@${user.username.toLowerCase()}</div>
-          <div class="dashboard-profile-id">ID: ${user.id || '—'}</div>
+        <img src="${avUrl}" alt="${displayName}" class="dashboard-profile-avatar"
+             onerror="this.outerHTML='<div class=\'dashboard-profile-avatar-placeholder\'><i class=\'fab fa-discord\'></i></div>'" />
+        <div style="flex:1;min-width:0">
+          <div class="dashboard-profile-name">${displayName}</div>
+          <div class="dashboard-profile-sub" style="color:#7289da">@${user.username}</div>
+          <div class="dashboard-profile-id">ID: ${user.id}</div>
         </div>
-        <span class="dashboard-role-badge ${this._roleColor(user.role)}">${user.role || 'Member'}</span>`;
+        <span class="dashboard-role-badge gray">Member</span>`;
     }
 
     // Info cells
     const sinceEl = document.getElementById('dash-since');
-    if (sinceEl) sinceEl.textContent = user.joinedAt ? new Date(user.joinedAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'short' }) : 'Early Member';
+    if (sinceEl) {
+      // Derive account creation from Discord snowflake ID
+      const created = new Date(Number(BigInt(user.id) >> 22n) + 1420070400000);
+      sinceEl.textContent = created.toLocaleDateString('en-GB', { year: 'numeric', month: 'short' });
+    }
     const idCell = document.getElementById('dash-id-cell');
-    if (idCell) idCell.textContent = user.id || '—';
+    if (idCell) idCell.textContent = user.id;
     const networkRole = document.getElementById('dash-network-role');
-    if (networkRole) networkRole.textContent = user.role || 'Community Member';
+    if (networkRole) networkRole.textContent = 'Community Member';
 
     // Minecraft link status
     await this.populateLinkStatus();
