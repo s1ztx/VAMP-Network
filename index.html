@@ -1887,12 +1887,6 @@
     </ul>
     <div class="nav-cta">
       <a href="#contact" class="btn-nav-secondary">Contact</a>
-      <div id="nav-auth-area">
-        <!-- Populated by Discord auth JS -->
-        <button class="btn-nav-auth" id="btn-discord-login" onclick="VAMPAuth.login()">
-          <i class="fab fa-discord"></i> Login with Discord
-        </button>
-      </div>
       <a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener" class="btn-nav-primary">
         <i class="fab fa-discord"></i> Join Discord
       </a>
@@ -2014,7 +2008,7 @@
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
               <span style="font-size:0.82rem;color:var(--gray)">Expected Launch</span>
-              <span style="font-size:0.8rem;font-weight:700;color:var(--white)">TBA 2026-27</span>
+              <span style="font-size:0.8rem;font-weight:700;color:var(--white)">TBA 2025</span>
             </div>
           </div>
         </div>
@@ -2577,11 +2571,13 @@
       </div>
     </div>
 
-    <!-- Community Stats Row -->
+    <!-- Community Stats Row — values populated by initCommunityStrip() -->
     <div style="margin-top:48px;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:36px 40px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center" class="reveal">
       <div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--blue-light);margin-bottom:4px">500+</div>
-        <div style="font-size:0.82rem;color:var(--gray)">Discord Members</div>
+        <div id="community-online-val" style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--blue-light);margin-bottom:4px">
+          <span class="skeleton" style="display:inline-block;width:70px;height:32px;border-radius:6px"></span>
+        </div>
+        <div id="community-online-label" style="font-size:0.82rem;color:var(--gray)">Members Online</div>
       </div>
       <div style="border-left:1px solid var(--border)">
         <div style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--white);margin-bottom:4px">Daily</div>
@@ -2764,7 +2760,7 @@
   <div class="footer-bottom">
     <div class="container">
       <div class="footer-bottom-inner">
-        <div class="footer-copyright">&copy; 2026-27 VAMP Network. All rights reserved. Not affiliated with Mojang or Microsoft.</div>
+        <div class="footer-copyright">&copy; 2025 VAMP Network. All rights reserved. Not affiliated with Mojang or Microsoft.</div>
         <div class="footer-badge">
           <span class="heart">&#9829;</span> Made with passion for Minecraft
         </div>
@@ -3046,38 +3042,62 @@ function animateCounter(el, target, suffix, duration = 1800, colorClass = '') {
     }
   }
 
-  if (widget.widgetDisabled) {
-    // Widget is disabled in server settings — show a clear message
-    // instead of fake numbers.
-    ['stat-members-num','stat-online-num','stat-boosts-num','stat-staff-num'].forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('skeleton','stat-skeleton-num');
-      el.className = 'live-stat-value gray';
-      el.style.fontSize = '1rem';
-      el.style.color = 'var(--gray-dark)';
-      el.textContent = 'Widget off';
-    });
-    const sub = document.getElementById('stat-members-sub');
-    if (sub) sub.innerHTML = 'Enable the Discord widget in<br>Server Settings → Widget';
-    const ctaCount = document.getElementById('cta-member-count');
-    if (ctaCount) ctaCount.textContent = 'a growing community of';
-    return;
+  // ---- Shared helper: render the three static stats that never need the widget ----
+  function renderStaticStats() {
+    // Website: 100%
+    populateStat('stat-online-num', 100, '%', 'white', '#stat-online .stat-label', 'Website Complete', null, null);
+    const onlineSub = document.querySelector('#stat-online .stat-sublabel');
+    if (onlineSub) onlineSub.textContent = 'Fully launched & live';
+
+    // Staff: 3
+    populateStat('stat-boosts-num', 3, '', 'red', '#stat-boosts .stat-label', 'Staff Members', 'stat-boosts-sub', 'Core team');
+
+    // Systems: 8
+    populateStat('stat-staff-num', 8, '', 'blue', '#stat-staff .stat-label', 'Systems in Dev', null, null);
+    const staffSub = document.querySelector('#stat-staff .stat-sublabel');
+    if (staffSub) staffSub.textContent = 'Custom-built features';
   }
 
-  if (!widget.widgetOk) {
-    // Network error — show dashes rather than fake data
-    ['stat-members-num','stat-online-num','stat-boosts-num','stat-staff-num'].forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('skeleton','stat-skeleton-num');
-      el.className = 'live-stat-value white';
-      el.textContent = '—';
-    });
+  if (widget.widgetDisabled || !widget.widgetOk) {
+    // Widget disabled OR network error — still show the three stats we always know.
+    // The online count slot gets a "Join Discord" nudge instead of a number.
+    renderStaticStats();
+
+    const membersEl = document.getElementById('stat-members-num');
+    if (membersEl) {
+      membersEl.classList.remove('skeleton', 'stat-skeleton-num');
+      membersEl.className = 'live-stat-value blue';
+      // Render a small Discord icon + link instead of a broken number
+      membersEl.style.fontSize = '1.1rem';
+      membersEl.style.letterSpacing = '0';
+      membersEl.innerHTML = '<i class="fab fa-discord" style="margin-right:6px;color:#7289da"></i>Join Us';
+    }
     const sub = document.getElementById('stat-members-sub');
-    if (sub) sub.textContent = 'Could not reach Discord';
+    if (sub) {
+      sub.innerHTML = widget.widgetDisabled
+        ? '<a href="https://discord.gg/XWxtNzAH" target="_blank" rel="noopener" style="color:var(--blue-light);text-decoration:none">discord.gg/XWxtNzAH</a>'
+        : 'discord.gg/XWxtNzAH';
+    }
+    const label = document.querySelector('#stat-members .stat-label');
+    if (label) label.textContent = 'Discord Community';
+
     const ctaCount = document.getElementById('cta-member-count');
-    if (ctaCount) ctaCount.textContent = 'hundreds of';
+    if (ctaCount) ctaCount.textContent = 'a growing community of players —';
+
+    // Community strip fallback
+    const comVal = document.getElementById('community-online-val');
+    const comLabel = document.getElementById('community-online-label');
+    if (comVal) comVal.innerHTML = '<i class="fab fa-discord" style="color:#7289da"></i>';
+    if (comLabel) comLabel.textContent = 'Discord Community';
+
+    const statusWrap = document.getElementById('discord-live-status-wrap');
+    if (statusWrap) {
+      statusWrap.innerHTML = `
+        <div class="discord-live-status-banner online" style="margin-top:16px">
+          <span class="status-indicator"></span>
+          Discord Active
+        </div>`;
+    }
     return;
   }
 
@@ -3091,34 +3111,20 @@ function animateCounter(el, target, suffix, duration = 1800, colorClass = '') {
     'stat-members-sub', 'Live from Discord right now'
   );
 
-  // Stat 2: Website — static 100%
-  populateStat(
-    'stat-online-num', 100, '%', 'white',
-    '#stat-online .stat-label', 'Website Complete',
-    null, null
-  );
-  const onlineSub = document.querySelector('#stat-online .stat-sublabel');
-  if (onlineSub) onlineSub.textContent = 'Fully launched & live';
-
-  // Stat 3: Staff Members — we know this
-  populateStat(
-    'stat-boosts-num', 3, '', 'red',
-    '#stat-boosts .stat-label', 'Staff Members',
-    'stat-boosts-sub', 'Core team'
-  );
-
-  // Stat 4: Systems in development — static
-  populateStat(
-    'stat-staff-num', 8, '', 'blue',
-    '#stat-staff .stat-label', 'Systems in Dev',
-    null, null
-  );
-  const staffSub = document.querySelector('#stat-staff .stat-sublabel');
-  if (staffSub) staffSub.textContent = 'Custom-built features';
+  // Stats 2-4 are static — reuse the shared helper
+  renderStaticStats();
 
   // ---- CTA section ----
   const ctaCount = document.getElementById('cta-member-count');
   if (ctaCount) ctaCount.textContent = online + ' members online now —';
+
+  // ---- Community strip (the card in the Community section) ----
+  const comVal = document.getElementById('community-online-val');
+  const comLabel = document.getElementById('community-online-label');
+  if (comVal) {
+    comVal.textContent = online;
+  }
+  if (comLabel) comLabel.textContent = 'Members Online Now';
 
   // ---- Live status banner ----
   const statusWrap = document.getElementById('discord-live-status-wrap');
@@ -3226,7 +3232,7 @@ const VAMPAuth = {
     if (!area) return;
     if (user) {
       const avatarHtml = user.avatar
-        ? `<img src="${user.avatar}" alt="" class="auth-avatar" onerror="this.outerHTML='<i class=\\'fab fa-discord\\'></i>'" />`
+        ? `<img src="${user.avatar}" alt="" class="auth-avatar" />`
         : `<i class="fab fa-discord"></i>`;
       area.innerHTML = `
         <button class="btn-nav-auth" onclick="VAMPDash.open()" title="Open dashboard">
@@ -3235,36 +3241,26 @@ const VAMPAuth = {
           <i class="fas fa-chevron-down" style="font-size:0.65rem;opacity:0.6"></i>
         </button>`;
     } else {
-      area.innerHTML = `
-        <button class="btn-nav-auth" id="btn-discord-login" onclick="VAMPAuth.login()">
-          <i class="fab fa-discord"></i> Login with Discord
-        </button>`;
+      area.innerHTML = '';
     }
   },
 
   login() {
-    const btn = document.getElementById('btn-discord-login');
-    if (btn) {
-      btn.classList.add('loading');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
-    }
-    // Redirect to backend OAuth2 endpoint
-    window.location.href = '/api/auth/discord';
+    window.open('https://discord.gg/XWxtNzAH', '_blank', 'noopener');
   },
 
   logout() {
     VAMPDash.close();
     this._user = null;
     this.renderNav(null);
-    fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
-      .catch(() => {});
-    VAMPToast.show('Signed out successfully.', 'blue');
+    VAMPToast.show('Signed out.', 'blue');
   },
 
   openDiscord() {
     window.open('https://discord.gg/XWxtNzAH', '_blank', 'noopener');
   }
 };
+
 
 // =================== DASHBOARD SYSTEM ===================
 const VAMPDash = {
@@ -3812,7 +3808,7 @@ window.addEventListener('DOMContentLoaded', () => VAMPAuth.init());
 (function() {
   const yearEls = document.querySelectorAll('.footer-copyright');
   yearEls.forEach(el => {
-    el.innerHTML = el.innerHTML.replace('2026-27', new Date().getFullYear());
+    el.innerHTML = el.innerHTML.replace('2025', new Date().getFullYear());
   });
 })();
 
