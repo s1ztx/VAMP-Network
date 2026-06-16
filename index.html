@@ -2906,24 +2906,35 @@ const STAFF_CONFIG = [
     username: 'NeoPRAJEET',
     role: 'Owner',
     accent: 'red',
-    bio: 'Leads the overall vision and direction of VAMP Network. The driving force behind every decision that shapes the server.',
-    socials: { discord: true, twitter: true, youtube: true }
+    bio: 'Leads the overall vision and direction of VAMP Network.',
+    socials: {
+      discord: 'https://discord.com/users/1080019657404207186',
+      youtube: 'https://youtube.com/@GamingWithPrajeet',
+      twitter: 'hhttps://x.com/PRAJEETOFFICIAL'
+    }
   },
   {
     username: 'TheMrig',
     role: 'Founder',
     accent: 'blue',
-    bio: 'Original creator and founder of the VAMP Network project. Conceptualized the network from the ground up and continues to guide its growth.',
-    socials: { discord: true, twitter: true }
+    bio: 'Original creator and founder of the VAMP Network project.',
+    socials: {
+      discord: 'https://discord.com/users/965973744780714034',
+      twitter: 'https://x.com/TheMrigReal01'
+    }
   },
   {
     username: 's1ztx',
     role: 'Lead Developer',
     accent: 'blue',
-    bio: 'Responsible for website development, backend systems, infrastructure, and all technical architecture powering the VAMP Network experience.',
-    socials: { discord: true, github: true, twitter: true }
+    bio: 'Responsible for website development and infrastructure.',
+    socials: {
+      discord: 'https://discord.com/users/1407323322399588392',
+      github: 'https://github.com/s1ztx',
+      twitter: 'https://x.com/s1ztx'
+    }
   }
-];
+];;
 
 // =================== DISCORD API LAYER ===================
 const DISCORD_GUILD_ID = '1249404976921313320';
@@ -3177,11 +3188,34 @@ function buildStaffCard(member, config, index) {
        </div>`;
 
   const socialIcons = [];
-  if (config.socials.discord) socialIcons.push(`<a href="https://discord.com/users/${member?.id || ''}" target="_blank" rel="noopener" class="team-social-link" title="Discord"><i class="fab fa-discord"></i></a>`);
-  if (config.socials.github) socialIcons.push(`<a href="https://github.com/${config.username}" target="_blank" rel="noopener" class="team-social-link" title="GitHub"><i class="fab fa-github"></i></a>`);
-  if (config.socials.twitter) socialIcons.push(`<a href="https://x.com/${config.username}" target="_blank" rel="noopener" class="team-social-link" title="Twitter/X"><i class="fab fa-x-twitter"></i></a>`);
-  if (config.socials.youtube) socialIcons.push(`<a href="https://youtube.com/@${config.username}" target="_blank" rel="noopener" class="team-social-link" title="YouTube"><i class="fab fa-youtube"></i></a>`);
 
+if (config.socials.discord)
+  socialIcons.push(
+    `<a href="${config.socials.discord}" target="_blank" rel="noopener" class="team-social-link" title="Discord">
+      <i class="fab fa-discord"></i>
+    </a>`
+  );
+
+if (config.socials.github)
+  socialIcons.push(
+    `<a href="${config.socials.github}" target="_blank" rel="noopener" class="team-social-link" title="GitHub">
+      <i class="fab fa-github"></i>
+    </a>`
+  );
+
+if (config.socials.twitter)
+  socialIcons.push(
+    `<a href="${config.socials.twitter}" target="_blank" rel="noopener" class="team-social-link" title="Twitter/X">
+      <i class="fab fa-x-twitter"></i>
+    </a>`
+  );
+
+if (config.socials.youtube)
+  socialIcons.push(
+    `<a href="${config.socials.youtube}" target="_blank" rel="noopener" class="team-social-link" title="YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>`
+  );
   return `
     <div class="team-card reveal visible" style="transition-delay:${delay}">
       <div class="team-avatar-wrap">
