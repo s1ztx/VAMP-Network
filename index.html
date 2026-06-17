@@ -2910,17 +2910,19 @@
 const STAFF_CONFIG = [
   {
     username: 'NeoPRAJEET',
+    avatar: 'assets/staff/neoprajeet.png',
     role: 'Owner',
     accent: 'red',
     bio: 'Leads the overall vision and direction of VAMP Network.',
     socials: {
       discord: 'https://discord.com/users/1080019657404207186',
       youtube: 'https://youtube.com/@GamingWithPrajeet',
-      twitter: 'hhttps://x.com/PRAJEETOFFICIAL'
+      twitter: 'https://x.com/PRAJEETOFFICIAL'
     }
   },
   {
     username: 'TheMrig',
+    avatar: 'assets/staff/themrig.png',
     role: 'Founder',
     accent: 'blue',
     bio: 'Original creator and founder of the VAMP Network project.',
@@ -2931,6 +2933,7 @@ const STAFF_CONFIG = [
   },
   {
     username: 's1ztx',
+    avatar: 'assets/staff/s1ztx.png',
     role: 'Lead Developer',
     accent: 'blue',
     bio: 'Responsible for website development and infrastructure.',
@@ -2940,8 +2943,8 @@ const STAFF_CONFIG = [
       twitter: 'https://x.com/s1ztx'
     }
   }
-];;
-
+];
+  
 // =================== DISCORD API LAYER ===================
 const DISCORD_GUILD_ID = '1249404976921313320';
 const DISCORD_WIDGET_URL = `https://discord.com/api/guilds/${DISCORD_GUILD_ID}/widget.json`;
@@ -3180,7 +3183,7 @@ function buildStaffCard(member, config, index) {
   const accentClass = config.accent; // 'red' or 'blue'
 
   const statusClass = member?.status || 'offline';
-  const avatarUrl = member?.avatar || null;
+  const avatarUrl = member?.avatar || config.avatar || null;
 
   const avatarHtml = avatarUrl
     ? `<div class="team-avatar-photo-wrap">
