@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAMP NETWORK — Rank Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #07070D;
+    --bg2:       #0F0F1A;
+    --card:      #111120;
+    --card-hover:#16162A;
+    --blood:     #C0152A;
+    --blood2:    #8B0D1D;
+    --gold:      #D4A843;
+    --bone:      #F0EAE0;
+    --muted:     #7A7A9A;
+    --border:    #1E1E35;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--bone);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── drip SVG background ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(192,21,42,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 30% at 80% 110%, rgba(192,21,42,0.07) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 64px 20px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bat-row {
+    font-size: 1.6rem;
+    letter-spacing: 0.5rem;
+    margin-bottom: 18px;
+    opacity: 0.55;
+  }
+
+  header h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    letter-spacing: 0.12em;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #F0EAE0 30%, var(--blood) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+  }
+
+  header h1 span {
+    display: block;
+    font-size: 0.38em;
+    letter-spacing: 0.35em;
+    font-weight: 600;
+    -webkit-text-fill-color: var(--blood);
+    margin-bottom: 6px;
+  }
+
+  .tagline {
+    margin-top: 16px;
+    font-size: 0.95rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .tagline strong {
+    color: var(--bone);
+    font-weight: 500;
+  }
+
+  /* ── GRID ── */
+  .shop {
+    position: relative;
+    z-index: 10;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    color: var(--blood);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .ranks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  /* ── RANK CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    position: relative;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--rank-color, var(--blood));
+    transition: height 0.25s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    background: var(--card-hover);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(192,21,42,0.08);
+  }
+
+  .card:hover::before { height: 5px; }
+
+  /* tier colors */
+  .card.vampire  { --rank-color: #C0152A; }
+  .card.titan    { --rank-color: #4A90D9; }
+  .card.legend   { --rank-color: #D4A843; }
+  .card.knight   { --rank-color: #7EB870; }
+  .card.warrior  { --rank-color: #B07040; }
+
+  .card-head {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rank-badge {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid currentColor;
+  }
+
+  .card.vampire  .rank-badge { color: #C0152A; }
+  .card.titan    .rank-badge { color: #4A90D9; }
+  .card.legend   .rank-badge { color: #D4A843; }
+  .card.knight   .rank-badge { color: #7EB870; }
+  .card.warrior  .rank-badge { color: #B07040; }
+
+  .card-head h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .card.vampire  .card-head h2 { color: #E8404F; }
+  .card.titan    .card-head h2 { color: #6AAEED; }
+  .card.legend   .card-head h2 { color: var(--gold); }
+  .card.knight   .card-head h2 { color: #96D48C; }
+  .card.warrior  .card-head h2 { color: #C89060; }
+
+  .tier-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* price table */
+  .prices {
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+  }
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-dur {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .price-val {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--bone);
+    white-space: nowrap;
+  }
+
+  .price-row.best .price-dur { color: var(--blood); }
+  .price-row.best .price-val {
+    color: #fff;
+    background: var(--blood);
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 0.78rem;
+  }
+
+  .price-row.perma .price-val { color: var(--gold); }
+
+  /* abilities */
+  .abilities {
+    padding: 22px 28px;
+    flex: 1;
+  }
+
+  .abilities h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  .abilities ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .abilities li {
+    font-size: 0.82rem;
+    color: #C5BFDA;
+    line-height: 1.45;
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .abilities li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--rank-color, var(--blood));
+    font-size: 0.7rem;
+    top: 1px;
+  }
+
+  .abilities li strong {
+    color: var(--bone);
+    font-weight: 500;
+  }
+
+  /* CTA */
+  .card-foot {
+    padding: 20px 28px 28px;
+  }
+
+  .btn-buy {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: filter 0.2s, transform 0.15s;
+    background: var(--rank-color, var(--blood));
+    color: #fff;
+  }
+
+  .btn-buy:hover {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+  }
+
+  .btn-buy:active { transform: scale(0.98); }
+
+  /* ── HOW TO BUY ── */
+  .how {
+    position: relative;
+    z-index: 10;
+    max-width: 680px;
+    margin: 0 auto 80px;
+    padding: 0 24px;
+  }
+
+  .how-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--blood);
+    border-radius: 4px;
+    padding: 36px 40px;
+  }
+
+  .how-box h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 24px;
+    color: var(--blood);
+  }
+
+  .how-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .how-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--blood);
+    min-width: 24px;
+    padding-top: 1px;
+  }
+
+  .step-text {
+    font-size: 0.875rem;
+    color: #C5BFDA;
+    line-height: 1.5;
+  }
+
+  .step-text strong { color: var(--bone); }
+
+  .how-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+    line-height: 1.6;
+  }
+
+  .how-note strong { color: var(--blood); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 28px 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  footer span { color: var(--blood); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .prices { grid-template-columns: 1fr; }
+    .how-box { padding: 28px 24px; }
+  }
+
+  /* ── VAMPIRE CARD SPECIAL GLOW ── */
+  .card.vampire:hover {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(192,21,42,0.18);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="bat-row">🦇 &nbsp; 🦇 &nbsp; 🦇</div>
+  <h1>
+    <span>Vamp Network</span>
+    Official Rank Shop
+  </h1>
+  <p class="tagline">Support the server &nbsp;·&nbsp; Unlock <strong>powerful abilities</strong> &nbsp;·&nbsp; Rise through the ranks</p>
+</header>
+
+<!-- SHOP GRID -->
+<section class="shop">
+  <p class="section-label">Choose Your Rank</p>
+
+  <div class="ranks-grid">
+
+    <!-- VAMPIRE -->
+    <div class="card vampire">
+      <div class="card-head">
+        <div class="rank-badge">ULTIMATE TIER</div>
+        <h2>[VAMPIRE]</h2>
+        <div class="tier-label">Rank I &nbsp;·&nbsp; Most Powerful</div>
+      </div>
+      <div class="prices">
+        <div class="price-row"><span class="price-dur">7 Days</span><span class="price-val">₹99</span></div>
+        <div class="price-row"><span class="price-dur">1 Month</span><span class="price-val">₹199</span></div>
+        <div class="price-row"><span class="price-dur">3 Months</span><span class="price-val">₹349</span></div>
+        <div class="price-row best"><span class="price-dur">6 Months ⭐</span><span class="price-val">₹549 Best Value</span></div>
+        <div class="price-row"><span class="price-dur">1 Year</span><span class="price-val">₹699</span></div>
+        <div class="price-row perma"><span class="price-dur">Permanent</span><span class="price-val">₹999</span></div>
+      </div>
+      <div class="abilities">
+        <h4>Abilities</h4>
+        <ul>
+          <li><strong>Full Fly</strong> — /fly in all worlds</li>
+          <li><strong>Blood Lust</strong> — Keep Inventory ON (except combat)</li>
+          <li><strong>Master Architect</strong> — Up to 20 Homes</li>
+          <li><strong>Vampire Kit</strong> — Full Netherite + Enchanted Golden Apples</li>
+          <li><strong>Priority Join</strong> — Enter even when server is full</li>
+          <li><strong>Custom Nick</strong> — Change name color with /nick</li>
+        </ul>
+      </div>
+      <div class="card-foot">
+        <a class="btn-buy" href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener">PURCHASE RANK</a>
+      </div>
+    </div>
+
+    <!-- TITAN -->
+    <div class="card titan">
+      <div class="card-head">
+        <div class="rank-badge">RANK II</div>
+        <h2>[TITAN]</h2>
+        <div class="tier-label">Rank II &nbsp;·&nbsp; Elite Tier</div>
+      </div>
+      <div class="prices">
+        <div class="price-row"><span class="price-dur">7 Days</span><span class="price-val">₹29</span></div>
+        <div class="price-row"><span class="price-dur">1 Month</span><span class="price-val">₹89</span></div>
+        <div class="price-row"><span class="price-dur">3 Months</span><span class="price-val">₹199</span></div>
+        <div class="price-row"><span class="price-dur">6 Months</span><span class="price-val">₹349</span></div>
+        <div class="price-row"><span class="price-dur">1 Year</span><span class="price-val">₹499</span></div>
+        <div class="price-row perma"><span class="price-dur">Permanent</span><span class="price-val">₹899</span></div>
+      </div>
+      <div class="abilities">
+        <h4>Abilities</h4>
+        <ul>
+          <li><strong>Infinity Hunger</strong> — /feed command anytime</li>
+          <li><strong>Titan Storage</strong> — Up to 12 Homes</li>
+          <li><strong>Titan Kit</strong> — Full Diamond (Prot 4) + Sharpness 5 Sword</li>
+          <li><strong>Utility</strong> — /condense (items → blocks instantly)</li>
+        </ul>
+      </div>
+      <div class="card-foot">
+        <a class="btn-buy" href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener">PURCHASE RANK</a>
+      </div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="card legend">
+      <div class="card-head">
+        <div class="rank-badge">RANK III</div>
+        <h2>[LEGEND]</h2>
+        <div class="tier-label">Rank III &nbsp;·&nbsp; Legendary Tier</div>
+      </div>
+      <div class="prices">
+        <div class="price-row"><span class="price-dur">7 Days</span><span class="price-val">₹15</span></div>
+        <div class="price-row"><span class="price-dur">1 Month</span><span class="price-val">₹39</span></div>
+        <div class="price-row"><span class="price-dur">3 Months</span><span class="price-val">₹99</span></div>
+        <div class="price-row"><span class="price-dur">6 Months</span><span class="price-val">₹179</span></div>
+        <div class="price-row"><span class="price-dur">1 Year</span><span class="price-val">₹299</span></div>
+        <div class="price-row perma"><span class="price-dur">Permanent</span><span class="price-val">₹499</span></div>
+      </div>
+      <div class="abilities">
+        <h4>Abilities</h4>
+        <ul>
+          <li><strong>Portable Crafting</strong> — /wb (Worktable) anywhere</li>
+          <li><strong>Legendary Homes</strong> — Up to 8 Homes</li>
+          <li><strong>Legend Kit</strong> — Diamond Armor + Iron Tools + 16 Golden Apples</li>
+          <li><strong>Cosmetic</strong> — /hat (wear any block on your head)</li>
+        </ul>
+      </div>
+      <div class="card-foot">
+        <a class="btn-buy" href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener">PURCHASE RANK</a>
+      </div>
+    </div>
+
+    <!-- KNIGHT -->
+    <div class="card knight">
+      <div class="card-head">
+        <div class="rank-badge">RANK IV</div>
+        <h2>[KNIGHT]</h2>
+        <div class="tier-label">Rank IV &nbsp;·&nbsp; Honorable Tier</div>
+      </div>
+      <div class="prices">
+        <div class="price-row"><span class="price-dur">7 Days</span><span class="price-val">₹9</span></div>
+        <div class="price-row"><span class="price-dur">1 Month</span><span class="price-val">₹25</span></div>
+        <div class="price-row"><span class="price-dur">3 Months</span><span class="price-val">₹59</span></div>
+        <div class="price-row"><span class="price-dur">6 Months</span><span class="price-val">₹99</span></div>
+        <div class="price-row"><span class="price-dur">1 Year</span><span class="price-val">₹149</span></div>
+        <div class="price-row perma"><span class="price-dur">Permanent</span><span class="price-val">₹299</span></div>
+      </div>
+      <div class="abilities">
+        <h4>Abilities</h4>
+        <ul>
+          <li><strong>Knight's Path</strong> — Up to 5 Homes</li>
+          <li><strong>Knight Kit</strong> — Full Iron Enchanted Set + 32 Cooked Steak</li>
+          <li><strong>Detection</strong> — /near to see nearby players</li>
+        </ul>
+      </div>
+      <div class="card-foot">
+        <a class="btn-buy" href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener">PURCHASE RANK</a>
+      </div>
+    </div>
+
+    <!-- WARRIOR -->
+    <div class="card warrior">
+      <div class="card-head">
+        <div class="rank-badge">RANK V</div>
+        <h2>[WARRIOR]</h2>
+        <div class="tier-label">Rank V &nbsp;·&nbsp; Entry Tier</div>
+      </div>
+      <div class="prices">
+        <div class="price-row"><span class="price-dur">7 Days</span><span class="price-val">₹5</span></div>
+        <div class="price-row"><span class="price-dur">1 Month</span><span class="price-val">₹15</span></div>
+        <div class="price-row"><span class="price-dur">3 Months</span><span class="price-val">₹39</span></div>
+        <div class="price-row"><span class="price-dur">6 Months</span><span class="price-val">₹59</span></div>
+        <div class="price-row"><span class="price-dur">1 Year</span><span class="price-val">₹89</span></div>
+        <div class="price-row perma"><span class="price-dur">Permanent</span><span class="price-val">₹149</span></div>
+      </div>
+      <div class="abilities">
+        <h4>Abilities</h4>
+        <ul>
+          <li><strong>Basic Survival</strong> — Up to 3 Homes</li>
+          <li><strong>Warrior Kit</strong> — Basic Iron Tools + Leather Armor</li>
+          <li><strong>Support</strong> — Exclusive Discord Role & Chat Color</li>
+        </ul>
+      </div>
+      <div class="card-foot">
+        <a class="btn-buy" href="https://discord.gg/V9WbgqG7" target="_blank" rel="noopener">PURCHASE RANK</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW TO BUY -->
+<section class="how">
+  <div class="how-box">
+    <h3>⚔ HOW TO BUY</h3>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="step-num">01</div>
+        <div class="step-text">Pick your rank from the cards above and click <strong>Purchase Rank</strong>.</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">02</div>
+        <div class="step-text">You'll be taken to our <strong>Discord server</strong>. Head to the support ticket channel and open a ticket.</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">03</div>
+        <div class="step-text">Send your <strong>In-Game Name (IGN)</strong> and ask for the <strong>UPI ID or QR Code</strong>.</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">04</div>
+        <div class="step-text">Complete the payment. An <strong>Owner/Admin</strong> will activate your rank within <strong>10–15 minutes</strong>!</div>
+      </div>
+    </div>
+    <div class="how-note">
+      ⚠ <strong>Note:</strong> Owner and Admin ranks are strictly <strong>NOT for sale</strong>. Do not ask.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  🦇 &nbsp; VAMP NETWORK &nbsp;·&nbsp; <span>All ranks are not permanent unless stated</span> &nbsp;·&nbsp; Join us on Discord
+</footer>
+
+</body>
+</html>
